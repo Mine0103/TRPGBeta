@@ -338,28 +338,34 @@ class field : AppCompatActivity() {
     }
     private fun showDeadDialog() {
         val var1 = application as variable
-        val dialog = AlertDialog.Builder(this)
-        dialog.setMessage(moname+"에게 죽었습니다.")
-        dialog.setTitle("플레이어 사망")
-        dialog.setNegativeButton("나가기")  { dialog, which ->
-            var1.stat1[1]+= floor((exp/2).toDouble()).toInt()
-            var1.money+=floor((money/2).toDouble()).toInt()
-            finish();
+        runOnUiThread {
+            val dialog = AlertDialog.Builder(this)
+            dialog.setMessage(moname+"에게 죽었습니다.")
+            dialog.setTitle("플레이어 사망")
+            dialog.setNegativeButton("나가기")  { dialog, which ->
+                var1.stat1[1]+= floor((exp/2).toDouble()).toInt()
+                var1.money+=floor((money/2).toDouble()).toInt()
+                finish();
+            }
+            dialog.show()
         }
-        dialog.show()
+
     }
     private fun showKillDialog() {
         val var1 = application as variable
-        val dialog = AlertDialog.Builder(this)
-        dialog.setMessage(moname+"를 죽였습니다.")
-        dialog.setTitle("몬스터 사망")
-        dialog.setNegativeButton("나가기") { dialog, which ->
-            var1.stat1[1]+=exp
-            var1.money+=money
-            finish()
+        runOnUiThread {
+            val dialog = AlertDialog.Builder(this)
+            dialog.setMessage(moname+"를 죽였습니다.")
+            dialog.setTitle("몬스터 사망")
+            dialog.setNegativeButton("나가기") { dialog, which ->
+                var1.stat1[1]+=exp
+                var1.money+=money
+                finish()
+            }
+            dialog.setPositiveButton("사냥하기") { dialog, which ->
+                huntingCheck1()
+            }
         }
-        dialog.setPositiveButton("사냥하기") { dialog, which ->
-            huntingCheck1()
-        }
+
     }
 }
