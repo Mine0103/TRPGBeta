@@ -71,23 +71,35 @@ class MainActivity : AppCompatActivity() {
         layout.addView(txt4)
         txt5 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
         layout.addView(txt5)
+        val lay1 = LinearLayout(this)
+        lay1.orientation = LinearLayout.HORIZONTAL
+        lay1.weightSum = 0.5f
+        val lay2 = LinearLayout(this)
+        lay2.orientation = LinearLayout.HORIZONTAL
         val but1 = addButton("스탯") {
             stat1()
         }
-        layout.addView(but1)
+        but1.width = windowManager.defaultDisplay.width/2
+        lay1.addView(but1)
         val but2 = addButton("사냥") {
             hunting()
         }
-        layout.addView(but2)
+        but2.width = windowManager.defaultDisplay.width/2
+        lay1.addView(but2)
         val but3 = addButton("마을") {
             val intent = Intent(applicationContext, village::class.java)
             startActivity(intent)
         }
-        layout.addView(but3)
+        but3.width = windowManager.defaultDisplay.width/2
+        lay2.addView(but3)
         val meun = addButton("메뉴") {
             showMeun()
         }
-        layout.addView(meun)
+        meun.width = windowManager.defaultDisplay.width/2
+        lay2.addView(meun)
+
+        layout.addView(lay1)
+        layout.addView(lay2)
 
         val info = addTextView("\n\nby.mine V1.0.0.11\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
         layout.addView(info)
