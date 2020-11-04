@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import java.sql.Time
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -31,6 +32,9 @@ class field : AppCompatActivity() {
     private var exp = 0
     private var money = 0
     private var isHunting = false
+    private var tt1: TimerTask? = null
+    private var tt2: TimerTask? = null
+    private var tt3: TimerTask? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -332,9 +336,16 @@ class field : AppCompatActivity() {
     }
     private fun hunting() {
         val var1 = application as variable
-        val tt1: TimerTask = object : TimerTask() {
+        tt1 = object : TimerTask() {
             override fun run() {
-                val att = var1.stat2[4]
+                var str: String = "";
+                var att: Int = 0
+                val ran = floor(Math.random() * 1000).toInt()+1
+                if(var1.stat4[1]*1000>=ran) {
+                    att = var1.stat3[4]*2
+                    str = "*크리티컬!*"
+                }
+                else var1.stat3[4]
                 val mhp = monster[0]-att
                 if(mhp>0) {
                     monster[0]-=att
@@ -342,10 +353,10 @@ class field : AppCompatActivity() {
                 if(mhp<=0) {
                     monster[0] = 0
                 }
-                txt1?.append(moname + "에게 " + att + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0])
+                txt1?.append(moname + "에게 " + att + "만큼의 데미지를 주었습니다."+str+"\n남은체력: " + monster[0])
             }
         }
-        val tt2: TimerTask = object : TimerTask() {
+        tt2 = object : TimerTask() {
             override fun run() {
                 val att = (monster[1]-floor(var1.stat4[3])).toInt()
                 val php = var1.stat2[0]-att
@@ -362,11 +373,11 @@ class field : AppCompatActivity() {
 
             }
         }
-        val tt3: TimerTask = object : TimerTask() {
+        tt3 = object : TimerTask() {
             override fun run() {
                 if(var1.stat2[0]<=0) {
                     showDeadDialog()
-                    isHunting = false
+                    timerCancle()
                     return
                 }
                 if(isHunting) {
@@ -374,7 +385,7 @@ class field : AppCompatActivity() {
                         exp+=monster[3]
                         money+=monster[4]
                         showKillDialog()
-                        isHunting = false
+                        timerCancle()
                         return
                     }
                 }
@@ -431,5 +442,11 @@ class field : AppCompatActivity() {
                 "다시사냥"
             ) { dialog, which -> huntingCheck() }
         }
+    }
+
+    fun timerCancle() {
+        tt1?.cancel()
+        tt2?.cancel()
+        tt3?.cancel()
     }
 }

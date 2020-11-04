@@ -9,6 +9,7 @@ package com.mine.trpgbeta
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -79,6 +80,18 @@ class MainActivity : AppCompatActivity() {
         val but1 = addButton("스탯") {
             stat1()
         }
+        but1.setOnLongClickListener {
+            val var1 = application as variable
+            if (var1.plusStat) {
+                showDialog("알림", "이미 보너스 스탯을 받았습니다.")
+            }
+            if (!var1.plusStat) {
+                var1.plusStat = true
+                var1.stat2[0]+=10
+                toast("보너스 스탯을 받았습니다.", false)
+            }
+            false
+        }
         but1.width = windowManager.defaultDisplay.width/2
         lay1.addView(but1)
         val but2 = addButton("사냥") {
@@ -101,7 +114,12 @@ class MainActivity : AppCompatActivity() {
         layout.addView(lay1)
         layout.addView(lay2)
 
-        val info = addTextView("\n\nby.mine V1.0.0.11\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
+        val info = addTextView(
+            "\n\nby.mine V1.0.0.11\nCopyright (c) 2020. mine. All rights reserved. ",
+            15,
+            Color.WHITE,
+            Gravity.CENTER
+        )
         layout.addView(info)
 
         val scroll = ScrollView(this)
@@ -114,7 +132,12 @@ class MainActivity : AppCompatActivity() {
         drawer!!.setBackgroundResource(R.drawable.background)
 
         val bnl = BottomNavigationLayout(this)
-        bnl.addBottomButton("포션", android.R.drawable.ic_menu_search, getRippleDrawable(), Color.WHITE) {
+        bnl.addBottomButton(
+            "포션",
+            android.R.drawable.ic_menu_search,
+            getRippleDrawable(),
+            Color.WHITE
+        ) {
             showPortionInventory()
         }
         bnl.setBackgroundColor(Color.TRANSPARENT)
@@ -125,6 +148,28 @@ class MainActivity : AppCompatActivity() {
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
         timer1()
+
+        val var1 = application as variable
+        val preferences = getSharedPreferences("variable", MODE_PRIVATE)
+        readStat(preferences, var1)
+        readVariable(preferences, var1)
+        readInventory(preferences, var1)
+        readPortion(preferences, var1)
+    }
+    private fun readStat(preferences: SharedPreferences, var1: variable) {
+
+    }
+
+    private fun readVariable(preferences: SharedPreferences, var1: variable) {
+
+    }
+
+    private fun readInventory(preferences: SharedPreferences?, var1: variable) {
+
+    }
+
+    private fun readPortion(preferences: SharedPreferences, var1: variable) {
+
     }
 
     override fun onBackPressed() {
@@ -139,6 +184,33 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         dialog.show()
+    }
+    override fun onStop() {
+        val `var` = application as variable
+        val preferences: SharedPreferences = getSharedPreferences("variable", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        saveStat(editor, `var`)
+        saveVariable(editor, `var`)
+        saveInventory(editor, `var`)
+        savePortion(editor, `var`)
+        editor.apply()
+        super.onStop()
+    }
+
+    private fun saveStat(editor: SharedPreferences.Editor, var1: variable) {
+
+    }
+
+    private fun saveVariable(editor: SharedPreferences.Editor, var1: variable) {
+
+    }
+
+    private fun saveInventory(editor: SharedPreferences.Editor, var1: variable) {
+
+    }
+
+    private fun savePortion(editor: SharedPreferences.Editor, var1: variable) {
+
     }
 
     @SuppressLint("RtlHardcoded", "SetTextI18n")
@@ -337,7 +409,7 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val list = ListView(this)
-        val meuns: Array<String> = arrayOf("패시브 확인", "인벤토리")
+        val meuns: Array<String> = arrayOf("패시브 확인", "인벤토리", "기타")
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meuns)
         list.adapter = adapter
         list.onItemClickListener = AdapterView.OnItemClickListener() { parent, view, position, id ->
@@ -346,6 +418,9 @@ class MainActivity : AppCompatActivity() {
             }
             if(position==1) {
                 showInventoryList()
+            }
+            if(position==2) {
+                otherFun();
             }
         }
         layout.addView(list)
@@ -483,6 +558,7 @@ class MainActivity : AppCompatActivity() {
         }
         layout.addView(but6)
 
+        dialog.setTitle("패시브 확인")
         dialog.setView(layout)
         dialog.setNegativeButton("닫기", null)
         dialog.show()
@@ -560,7 +636,11 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val listview = ListView(this)
-        val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, var1.inventory)
+        val adapter = ArrayAdapter(
+            applicationContext,
+            android.R.layout.simple_list_item_1,
+            var1.inventory
+        )
         listview.adapter = adapter
         layout.addView(listview)
 
@@ -581,5 +661,45 @@ class MainActivity : AppCompatActivity() {
     }
     private fun cheakUsePortion() {
 
+    }
+
+    private fun otherFun() {
+        val dialog = AlertDialog.Builder(this)
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        val but1 = addButton("저장") {
+            saveCheck()
+        }
+        layout.addView(but1)
+        val but2 = addButton("불러오기") {
+            loadCheck()
+        }
+        layout.addView(but2)
+
+        dialog.setTitle("기타 기능")
+        dialog.setView(layout)
+        dialog.setNegativeButton("닫기", null)
+        dialog.show()
+    }
+
+    private fun saveCheck() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle("저장")
+        dialog.setMessage("게임 정보를 내부저장소에 저장하시겠습니까?")
+        dialog.setNegativeButton("닫기", null)
+        dialog.setPositiveButton("저장") { dialog, which ->
+            showDialog("알림", "아직 지원하지않는 기능입니다.")
+        }
+        dialog.show()
+    }
+    private fun loadCheck() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle("저장")
+        dialog.setMessage("게임 정보를 내부저장소에서 불러오시겠습니까?")
+        dialog.setNegativeButton("닫기", null)
+        dialog.setPositiveButton("불러오기") { dialog, which ->
+            showDialog("알림", "아직 지원하지않는 기능입니다.")
+        }
+        dialog.show()
     }
 }
