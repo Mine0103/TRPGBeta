@@ -405,7 +405,7 @@ class field : AppCompatActivity() {
             dialog.setTitle("죽었습니다")
             dialog.setMessage(
                 """
-                당신은 ${moname.toString()}에게 죽었습니다.
+                당신은 ${moname}에게 죽었습니다.
                 돌아가기를 눌러 메인화면으로 돌아가십시요.
                 """.trimIndent()
             )
@@ -426,7 +426,7 @@ class field : AppCompatActivity() {
             dialog.setTitle("☆승리했따☆")
             dialog.setMessage(
                 """
-                당신은 ${moname.toString()}를 죽였습니다.
+                당신은 ${moname}를 죽였습니다.
                 돌아가기 버튼을 누르면 메인화면으로 돌아갑니다.
                 다시사냥 버튼을 누르면 사냥을 시작합니다.
                 """.trimIndent()

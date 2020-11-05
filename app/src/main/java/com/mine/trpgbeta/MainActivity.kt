@@ -33,6 +33,7 @@ import java.io.*
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
@@ -157,19 +158,49 @@ class MainActivity : AppCompatActivity() {
         readPortion(preferences, var1)
     }
     private fun readStat(preferences: SharedPreferences, var1: variable) {
+        var1.stat1[0] = preferences.getInt("stat1[0]", 1)
+        var1.stat1[1] = preferences.getInt("stat1[1]", 0)
+        var1.stat1[2] = preferences.getInt("stat1[2]", 10)
 
+        var1.stat2[0] = preferences.getInt("stat2[0]", 10)
+        var1.stat2[1] = preferences.getInt("stat2[1]", 0)
+        var1.stat2[2] = preferences.getInt("stat2[2]", 0)
+        var1.stat2[3] = preferences.getInt("stat2[3]", 0)
+        var1.stat2[4] = preferences.getInt("stat2[4]", 0)
+        var1.stat2[5] = preferences.getInt("stat2[5]", 0)
+        var1.stat2[6] = preferences.getInt("stat2[6]", 0)
+        var1.stat2[7] = preferences.getInt("stat2[7]", 0)
+
+        var1.stat3[0] = preferences.getInt("stat3[0]", 10)
+        var1.stat3[1] = preferences.getInt("stat3[1]", 10)
+        var1.stat3[2] = preferences.getInt("stat3[2]", 10)
+        var1.stat3[3] = preferences.getInt("stat3[3]", 10)
+        var1.stat3[4] = preferences.getInt("stat3[4]", 2)
+
+        var1.stat4[0] = preferences.getFloat("stat4[0]", 5.0f).toDouble()
+        var1.stat4[1] = preferences.getFloat("stat4[1]", 0.0f).toDouble()
+        var1.stat4[2] = preferences.getFloat("stat4[2]", 0.0f).toDouble()
     }
 
     private fun readVariable(preferences: SharedPreferences, var1: variable) {
-
+        var1.plusStat = preferences.getBoolean("plusStat", false)
+        var1.money = preferences.getInt("money", 500)
+        var1.insize = preferences.getInt("inSize", 0)
     }
 
-    private fun readInventory(preferences: SharedPreferences?, var1: variable) {
-
+    private fun readInventory(preferences: SharedPreferences, var1: variable) {
+        for (n in 0 until var1.insize) {
+            val s1 = "im$n"
+            var1.itemname[n] = preferences.getString(s1, "")
+            val s2 = "ic$n"
+            var1.itemcount[n] = preferences.getInt(s2, 0)
+        }
     }
 
     private fun readPortion(preferences: SharedPreferences, var1: variable) {
-
+        for (n in 0..6) {
+            var1.portionCount[n] = preferences.getInt("p$n", 0)
+        }
     }
 
     override fun onBackPressed() {
@@ -198,19 +229,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveStat(editor: SharedPreferences.Editor, var1: variable) {
+        editor.putInt("stat1[0]", var1.stat1[0])
+        editor.putInt("stat1[1]", var1.stat1[1])
+        editor.putInt("stat1[2]", var1.stat1[2])
 
+        editor.putInt("stat2[0]", var1.stat2[0])
+        editor.putInt("stat2[1]", var1.stat2[1])
+        editor.putInt("stat2[2]", var1.stat2[2])
+        editor.putInt("stat2[3]", var1.stat2[3])
+        editor.putInt("stat2[4]", var1.stat2[4])
+        editor.putInt("stat2[5]", var1.stat2[5])
+        editor.putInt("stat2[6]", var1.stat2[6])
+        editor.putInt("stat2[7]", var1.stat2[7])
+
+        editor.putInt("stat3[0]", var1.stat3[0])
+        editor.putInt("stat3[1]", var1.stat3[1])
+        editor.putInt("stat3[2]", var1.stat3[2])
+        editor.putInt("stat3[3]", var1.stat3[3])
+        editor.putInt("stat3[4]", var1.stat3[4])
+
+        editor.putFloat("stat4[0]", var1.stat4[0].toFloat())
+        editor.putFloat("stat4[1]", var1.stat4[1].toFloat())
+        editor.putFloat("stat4[2]", var1.stat4[2].toFloat())
     }
 
     private fun saveVariable(editor: SharedPreferences.Editor, var1: variable) {
-
+        editor.putBoolean("plusStat", var1.plusStat)
+        editor.putInt("money", var1.money)
+        editor.putInt("inSize", var1.insize)
     }
 
     private fun saveInventory(editor: SharedPreferences.Editor, var1: variable) {
-
+        for (n in 0 until var1.insize) {
+            val s1 = "im$n"
+            editor.putString(s1, var1.itemname[n])
+            val s2 = "ic$n"
+            var1.itemcount[n]?.let { editor.putInt(s2, it) }
+        }
     }
 
     private fun savePortion(editor: SharedPreferences.Editor, var1: variable) {
-
+        for (n in 0..6) {
+            editor.putInt("p$n", var1.portionCount[n])
+        }
     }
 
     @SuppressLint("RtlHardcoded", "SetTextI18n")
@@ -675,6 +736,10 @@ class MainActivity : AppCompatActivity() {
             loadCheck()
         }
         layout.addView(but2)
+        val but3 = addButton("초기화") {
+            reset()
+        }
+        layout.addView(but3)
 
         dialog.setTitle("기타 기능")
         dialog.setView(layout)
@@ -699,6 +764,22 @@ class MainActivity : AppCompatActivity() {
         dialog.setNegativeButton("닫기", null)
         dialog.setPositiveButton("불러오기") { dialog, which ->
             showDialog("알림", "아직 지원하지않는 기능입니다.")
+        }
+        dialog.show()
+    }
+    private fun reset() {
+        val var1 = application as variable
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle("확인")
+        dialog.setMessage("정말로 초기화 하시겠습니까?\n모든 정보가 초기화되며 복구가 불가능합니다.\n초기화 진행시 앱이 재시작 됩니다.")
+        dialog.setNegativeButton("취소", null)
+        dialog.setPositiveButton("초기화") { dialog, which ->
+            var1.resetVar();
+            toast("초기화 되어습니다.", true)
+            finishAffinity()
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            exitProcess(0)
         }
         dialog.show()
     }

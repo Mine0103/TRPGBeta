@@ -51,4 +51,26 @@ class variable: Application() {
             inventory[n] = itemname[n].toString() + " - " + itemcount[n]
         }
     }
+    //10 50 100 500 1000 2000 5000
+    var portionCount: Array<Int> = arrayOf(0, 0, 0, 0, 0, 0, 0)
+
+    fun resetVar() {
+        plusStat = false
+        //레벨, 현 경험치, 요구 경험치
+        stat1 = arrayOf(1, 0, 10)
+        //스탯 힘 민첩 체력 운 방어 지능 지혜
+        stat2 = arrayOf(10, 0, 0, 0, 0, 0, 0, 0)
+        //현 체력, 최대 체력, 현 마나, 최대 마나, 공격력
+        stat3 = arrayOf(10, 10, 10, 10, 2)
+        //공격속도, 치명타확률, 방어력
+        stat4 = arrayOf(5.0, 0.0, 0.0)
+        //체력 회복량, 마나 회복량
+        stat5 = arrayOf(2, 1)
+        money = 500
+        itemname = arrayOfNulls<String>(0)
+        itemcount = arrayOfNulls<Int>(0)
+        inventory = arrayOfNulls<String>(0)
+        insize = 0
+        portionCount = arrayOf(0, 0, 0, 0, 0, 0, 0)
+    }
 }
