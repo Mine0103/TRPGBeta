@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import java.sql.Time
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -31,10 +30,13 @@ class field : AppCompatActivity() {
     private var txt1: TextView? = null
     private var exp = 0
     private var money = 0
+    private var attsp = 0;
+    private var def = 0;
     private var isHunting = false
     private var tt1: TimerTask? = null
     private var tt2: TimerTask? = null
     private var tt3: TimerTask? = null
+    private var tt4: TimerTask? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -334,70 +336,149 @@ class field : AppCompatActivity() {
         }
         dialog.show()
     }
-    private fun hunting() {
-        val var1 = application as variable
-        tt1 = object : TimerTask() {
-            override fun run() {
-                var str: String = "";
-                var att: Int = 0
-                val ran = floor(Math.random() * 1000).toInt()+1
-                if(var1.stat4[1]*1000>=ran) {
-                    att = var1.stat3[4]*2
-                    str = "*크리티컬!*"
-                }
-                else var1.stat3[4]
-                val mhp = monster[0]-att
-                if(mhp>0) {
-                    monster[0]-=att
-                }
-                if(mhp<=0) {
-                    monster[0] = 0
-                }
-                txt1?.append(moname + "에게 " + att + "만큼의 데미지를 주었습니다."+str+"\n남은체력: " + monster[0])
-            }
-        }
-        tt2 = object : TimerTask() {
-            override fun run() {
-                val att = (monster[1]-floor(var1.stat4[3])).toInt()
-                val php = var1.stat2[0]-att
-                if(att<=0) txt1?.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + monster[0])
-                else {
-                    if(php>0) {
-                        var1.stat2[0]-=att
-                    }
-                    if(php<=0) {
-                        var1.stat2[0] = 0
-                    }
-                    txt1?.append(moname + "에게서 " + att + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0])
-                }
-
-            }
-        }
-        tt3 = object : TimerTask() {
-            override fun run() {
-                if(var1.stat2[0]<=0) {
-                    showDeadDialog()
-                    timerCancle()
-                    return
-                }
-                if(isHunting) {
-                    if(monster[0]<=0) {
-                        exp+=monster[3]
-                        money+=monster[4]
-                        showKillDialog()
-                        timerCancle()
-                        return
-                    }
-                }
-            }
-        }
-        val pas = (var1.stat4[0]*1000).toLong()
-        val map = (monster[2]*1000).toLong()
-        val timer = Timer()
-        timer.schedule(tt1, pas, pas)
-        timer.schedule(tt2, map, map)
-        timer.schedule(tt3, 100, 100)
-    }
+     private fun hunting() {
+         val `var` = application as variable
+         val timer = Timer()
+         tt1 = object : TimerTask() {
+             override fun run() {
+                 runOnUiThread {
+                     val crit = floor(Math.random() * 1000).toInt() + 1
+                     if (`var`.stat4[1] * 1000 >= crit) {
+                         if (`var`.stat3[4] * 2.let { monster[0] -= it; monster[0] } < 0) {
+                             monster[0] = 0
+                             txt1!!.append(moname + "에게 " + `var`.stat3[4] * 2 + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0] + " *크리티컬*\n")
+                         }
+                         if (`var`.stat3[4] * 2.let { monster[0] -= it; monster[0] } >= 0) {
+                             monster[0] -= `var`.stat3[4]
+                             txt1!!.append(moname + "에게 " + `var`.stat3[4] * 2 + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0] + " *크리티컬*\n")
+                         }
+                     }
+                     if (`var`.stat4[1] * 1000 < crit) {
+                         if (`var`.stat3[4].let { monster[0] -= it; monster[0] } < 0) {
+                             monster[0] = 0
+                             txt1!!.append(moname + "에게 " + `var`.stat3[4] + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0] + "\n")
+                         }
+                         if (`var`.stat3[4].let { monster[0] -= it; monster[0] } >= 0) {
+                             monster[0] -= floor((`var`.stat3[4] / 2).toDouble()).toInt()
+                             txt1!!.append(moname + "에게 " + `var`.stat3[4] + "만큼의 데미지를 주었습니다.\n남은체력: " + monster[0] + "\n")
+                         }
+                     }
+                     if (`var`.passive[0][3]) {
+                         val ran1 = floor(Math.random() * 100).toInt() + 1
+                         if (ran1 <= 5) {
+                             val thread = Thread {
+                                 try {
+                                     tt2!!.cancel()
+                                     Thread.sleep(2000)
+                                     tt2 = object : TimerTask() {
+                                         override fun run() {
+                                             runOnUiThread {
+                                                 val def = floor(`var`.stat4[2]).toInt()
+                                                 val ran1 =
+                                                     floor(Math.random() * 100)
+                                                         .toInt() + 1
+                                                 if (`var`.passive[4][4]) {
+                                                     if (`var`.passive[4][7]) {
+                                                         if (ran1 <= 5) {
+                                                             txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                                                         }
+                                                     }
+                                                     if (!`var`.passive[4][7]) {
+                                                         if (ran1 <= 1) {
+                                                             txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                                                         }
+                                                     }
+                                                 }
+                                                 if (!`var`.passive[4][4]) {
+                                                     if (monster[1] > def) {
+                                                         `var`.stat3[0] -= (monster[1] - def)
+                                                         txt1!!.append(moname + "에게서 " + (monster[1] - def) + "만큼의 데미지를 받았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                                                     }
+                                                     if (monster[1] <= def) {
+                                                         txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                                                     }
+                                                 }
+                                             }
+                                         }
+                                     }
+                                     timer.schedule(tt2, 0, monster[2].toLong())
+                                 } catch (e: InterruptedException) {
+                                     e.printStackTrace()
+                                 }
+                             }
+                             thread.start()
+                             runOnUiThread { txt1!!.append(moname + "를(을) 기절시켰습니다.") }
+                         }
+                     }
+                 }
+             }
+         }
+         tt2 = object : TimerTask() {
+             override fun run() {
+                 runOnUiThread {
+                     def = floor(`var`.stat4[2]).toInt()
+                     val ran1 = floor(Math.random() * 100).toInt() + 1
+                     if (`var`.passive[4][4]) {
+                         if (`var`.passive[4][7]) {
+                             if (ran1 <= 5) {
+                                 txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                             }
+                         }
+                         if (!`var`.passive[4][7]) {
+                             if (ran1 <= 1) {
+                                 txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                             }
+                         }
+                     }
+                     if (!`var`.passive[4][4]) {
+                         if (monster[1] > def) {
+                             `var`.stat3[0] -= (monster[1] - def)
+                             txt1!!.append(moname + "에게서 " + (monster[1] - def) + "만큼의 데미지를 받았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                         }
+                         if (monster[1] <= def) {
+                             txt1!!.append(moname + "에게서 데미지를 받지 않았습니다.\n남은체력: " + `var`.stat3[0] + "\n")
+                         }
+                     }
+                 }
+             }
+         }
+         tt3 = object : TimerTask() {
+             override fun run() {
+                 if (monster[0] <= 0) {
+                     runOnUiThread { txt1!!.append("\n") }
+                     exp += monster[3]
+                     if (`var`.passive[0][1]) {
+                         val hp = floor(`var`.stat3[1] * 0.02).toInt()
+                         if (`var`.stat3[0] + hp <= `var`.stat3[1]) {
+                             `var`.stat3[0]+=hp
+                         }
+                         if (`var`.stat3[1] + hp > `var`.stat3[1]) {
+                             `var`.stat3[0] = (`var`.stat3[1])
+                         }
+                     }
+                     money += monster[4]
+                     showKillDialog()
+                     timercancle()
+                 }
+             }
+         }
+         tt4 = object : TimerTask() {
+             override fun run() {
+                 if (`var`.stat3[0] <= 0) {
+                     exp = floor(exp / 2.toDouble()).toInt()
+                     money = floor(money / 2.toDouble()).toInt()
+                     showDeadDialog()
+                     timercancle()
+                     `var`.stat3[0] = (`var`.stat3[1])
+                 }
+             }
+         }
+         attsp = `var`.stat4[0].toInt() * 1000
+         timer.schedule(tt1, attsp.toLong(), attsp.toLong())
+         timer.schedule(tt2, monster[2].toLong(), monster[2].toLong())
+         timer.schedule(tt3, 10, 10)
+         timer.schedule(tt4, 10, 10)
+     }
     fun showDeadDialog() {
         if (!this.isFinishing) {
             val dialog = android.app.AlertDialog.Builder(this)
@@ -444,9 +525,10 @@ class field : AppCompatActivity() {
         }
     }
 
-    fun timerCancle() {
-        tt1?.cancel()
-        tt2?.cancel()
-        tt3?.cancel()
+    fun timercancle() {
+        tt1!!.cancel()
+        tt2!!.cancel()
+        tt3!!.cancel()
+        tt4!!.cancel()
     }
 }
