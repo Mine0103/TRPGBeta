@@ -29,6 +29,7 @@
         <activity android:name=".field" android:screenOrientation="portrait"/>
         <activity android:name=".raid" android:screenOrientation="portrait"/>
         <activity android:name=".village" android:screenOrientation="portrait"/>
+        <activity android:name=".shop" android:screenOrientation="portrait" />
         <meta-data android:name="android.arch.lifecycle.VERSION" android:value="27.0.0-SNAPSHOT"/>
     </application>
 </manifest>

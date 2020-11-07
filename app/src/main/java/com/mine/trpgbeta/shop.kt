@@ -1,9 +1,3 @@
-/*
- * Create by mine on 2020. 10. 30.
- * Copyright (c) 2020. mine. All rights reserved.
- *
- */
-
 package com.mine.trpgbeta
 
 import android.annotation.SuppressLint
@@ -11,136 +5,149 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import kotlin.math.ceil
+import java.util.*
 
-class shop: AppCompatActivity() {
-    private var drawer: DrawerLayout? = null
+class shop : AppCompatActivity() {
+    var drawer: DrawerLayout? = null
+    var txt1: TextView? = null
+    var tt1: TimerTask? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val `var` = application as variable
         val layout0 = LinearLayout(this)
         layout0.orientation = LinearLayout.VERTICAL
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(베타)"
+        toolbar.title = "TRPG(마을) - 상점"
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setBackgroundColor(Color.TRANSPARENT)
-        ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
-        layout0.addView(toolbar)
-
+        layout.addView(toolbar)
+        //setSupportActionBar(toolbar)
+        txt1 = addTextView("", 20, Color.WHITE, Gravity.CENTER)
+        layout.addView(txt1)
+        val but1 = addButton("구매", View.OnClickListener { buyDialog() })
+        layout.addView(but1)
         val scroll = ScrollView(this)
         scroll.addView(layout)
         layout0.addView(scroll)
         drawer = DrawerLayout(this)
         drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
+        val layout2 = LinearLayout(this)
         drawer!!.addView(layout2)
         drawer!!.setBackgroundResource(R.drawable.background)
-
         setContentView(drawer)
-        //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
+        setContentView(drawer)
+        timer1()
     }
 
-    @SuppressLint("RtlHardcoded", "SetTextI18n")
-    private fun createDrawerLayout(): LinearLayout? {
-        try {
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            val title = TextView(this)
-            title.text = "TRPG"
-            title.textSize = 25F
-            title.setTextColor(Color.WHITE)
-            title.setBackgroundColor(Color.BLUE)
-            val pad = dip2px(15)
-            title.setPadding(pad, pad, pad, dip2px(20))
-            val margin = LinearLayout.LayoutParams(-1, -2)
-            margin.setMargins(0, 0, 0, dip2px(10))
-            title.layoutParams = margin
-            layout.addView(title)
-            /*val list = ListView(this)
-            val meuns = arrayOf("패시브확인", "인벤토리")
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meuns)
-            list.adapter = adapter
-            list.onItemClickListener =
-                AdapterView.OnItemClickListener { parent, view, position, id ->
-                    if (position == 0) {
-                        showPassive()
-                    }
-                    if (position == 1) {
-                        showInventoryList()
-                    }
-                }
-            layout.addView(list)*/
-            val params = DrawerLayout.LayoutParams(-1, -1)
-            params.gravity = Gravity.LEFT
-            layout.layoutParams = params
-            layout.setBackgroundColor(Color.WHITE)
-            return layout
-        } catch (e: Exception) {
-            toast(e.toString(), true)
-        }
-        return null
-    }
-    @SuppressLint("RtlHardcoded")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        try {
-            if (drawer!!.isDrawerOpen(Gravity.LEFT)) {
-                drawer!!.closeDrawer(Gravity.LEFT)
-            } else {
-                drawer!!.openDrawer(Gravity.LEFT)
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun dip2px(dips: Int): Int {
-        return ceil(dips * this.resources.displayMetrics.density.toDouble()).toInt()
-    }
-    private fun addTextView(text: String, size: Int, color: Int, gravity: Int?): TextView {
-        val txt = TextView(this)
-        txt.text = text
-        txt.textSize = size.toFloat()
-        txt.setTextColor(color)
-        if (gravity != null) {
-            txt.gravity = gravity
-        }
-        return txt
-    }
-    private fun addButton(txt: String, listener: View.OnClickListener?): Button {
+    private fun addButton(text: String?, listener: View.OnClickListener?): Button {
         val btn = Button(this)
-        btn.text = txt
-        if(listener!=null) {
-            btn.setOnClickListener(listener)
-        }
+        btn.text = text
+        btn.setOnClickListener(listener)
         return btn
     }
-    private fun toast(msg: String, isLong: Boolean) {
-        if(isLong) {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        }
+
+    private fun addTextView(txt: String?, size: Int, color: Int, gravity: Int): TextView {
+        val text = TextView(this)
+        text.text = txt
+        text.textSize = size.toFloat()
+        text.setTextColor(color)
+        text.gravity = gravity
+        return text
     }
-    private fun showDialog(title: String, msg: String) {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle(title)
-        dialog.setMessage(msg)
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    private fun timer1() {
+        val `var` = application as variable
+        tt1 = object : TimerTask() {
+            @SuppressLint("SetTextI18n")
+            override fun run() {
+                runOnUiThread { txt1!!.text = "돈: " + `var`.money }
+            }
+        }
+        val timer = Timer()
+        timer.schedule(tt1, 100, 100)
+    }
+
+    private fun buyDialog() {
+        val builder = AlertDialog.Builder(this)
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        builder.setTitle("구매")
+        builder.setNegativeButton("닫기", null)
+        val but1 = addButton("포션구매", View.OnClickListener { buyPortionDialog() })
+        layout.addView(but1)
+        builder.setView(layout)
+        builder.show()
+    }
+
+    private fun buyPortionDialog() {
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        builder.setMessage("돈: " + `var`.money)
+        val meun = arrayOf<String?>("10회복포션 - 500원", "50회복포션 - 2750원", "100회복포션 - 5500원",
+            "500회복포션 - 30250원", "1000회복포션 - 66550원", "2000회복포션 - 146410원",
+            "5000회복포션 - 366025원")
+        val listView = ListView(this)
+        val adapter: ArrayAdapter<*> = ArrayAdapter<Any?>(this, android.R.layout.simple_list_item_1, meun)
+        listView.adapter = adapter
+        listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            val data = parent.getItemAtPosition(position).toString()
+            val name = data.split(" - ".toRegex()).toTypedArray()[0]
+            val num1 = number(name.split("회복포션".toRegex()).toTypedArray()[0])
+            val money = number(data.split(" - ".toRegex()).toTypedArray()[1].split("원".toRegex()).toTypedArray()[0])
+            if (`var`.money >= money) {
+                buyPortion(num1)
+                `var`.money -= money
+                builder.setMessage("돈: $money")
+            }
+            if (`var`.money < money) {
+                showDialog("알림", "돈이 부족합니다.")
+            }
+        }
+        layout.addView(listView)
+        builder.setView(layout)
+        builder.setNegativeButton("닫기", null)
+        builder.show()
+    }
+
+    private fun buyPortion(n1: Int) {
+        val `var` = application as variable
+        var insize = `var`.insize
+        val name = n1.toString() + "회복포션"
+        for (i in 0 until insize) {
+            if (`var`.itemname[i] === name) {
+                val c1 = `var`.itemcount[i]?.plus(1)
+                `var`.itemcount[i] = c1
+            } else if (`var`.itemname[i] !== name) {
+                `var`.addInsize()
+                insize = `var`.insize
+                `var`.itemname[insize-1] = n1.toString() + "회복포션"
+                `var`.itemcount[insize-1] = 1
+            }
+        }
+        return
+    }
+
+    private fun number(s: String): Int {
+        return s.toInt()
+    }
+
+    private fun showDialog(title: String?, msg: String?) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(msg)
+        builder.setNegativeButton("닫기", null)
+        builder.show()
     }
 }

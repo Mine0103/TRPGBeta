@@ -71,7 +71,7 @@ class field : AppCompatActivity() {
             getRippleDrawable(),
             Color.WHITE
         ) {
-            //showPortionInventory()
+            showPortionInventory()
         }
         bnl.setBackgroundColor(Color.TRANSPARENT)
         drawer!!.addView(bnl)
@@ -530,5 +530,66 @@ class field : AppCompatActivity() {
         tt2!!.cancel()
         tt3!!.cancel()
         tt4!!.cancel()
+    }
+
+    private fun showPortionInventory() {
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        val portionName = arrayOfNulls<String>(7)
+        portionName[0] = "10회복포션 - " + `var`.portionCount[0]
+        portionName[1] = "50회복포션 - " + `var`.portionCount[1]
+        portionName[2] = "100회복포션 - " + `var`.portionCount[2]
+        portionName[3] = "500회복포션 - " + `var`.portionCount[3]
+        portionName[4] = "1000회복포션 - " + `var`.portionCount[4]
+        portionName[5] = "2000회복포션 - " + `var`.portionCount[5]
+        portionName[6] = "5000회복포션 - " + `var`.portionCount[6]
+        val listView = ListView(this)
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, portionName)
+        listView.adapter = adapter
+        listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val item = parent.getItemAtPosition(position).toString()
+                val itemname = item.split(" - ".toRegex()).toTypedArray()[0]
+                val itemcount: Int = item.split(" - ".toRegex()).toTypedArray()[1].toInt()
+                cheakUsePortion(itemname, itemcount, position)
+                adapter.notifyDataSetChanged()
+            }
+        layout.addView(listView)
+        builder.setView(layout)
+        builder.setTitle("포션 인벤토리")
+        builder.setNegativeButton("닫기", null)
+        builder.show()
+    }
+
+    private fun cheakUsePortion(name: String, count: Int, pos: Int) {
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("포션 사용 확인")
+        builder.setMessage(
+            """
+            ${name}을 사용하시겠습니까?
+            남은 갯수: $count
+            """.trimIndent()
+        )
+        builder.setNegativeButton("취소", null)
+        builder.setPositiveButton("사용"
+        ) { dialog, which ->
+            val heal: Int = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
+            if (`var`.stat3[0] + heal <= `var`.stat3[1]) {
+                `var`.stat3[0] += (heal)
+                `var`.portionCount[pos] -= 1
+            }
+            if (`var`.stat3[0] + heal > `var`.stat3[1]) {
+                `var`.stat3[0] = (`var`.stat3[1])
+                `var`.portionCount[pos] -= 1
+            }
+            if (`var`.stat3[0] == `var`.stat3[1]) {
+                toast("이미 최대 체력입니다.", false)
+            }
+        }
+        builder.show()
     }
 }

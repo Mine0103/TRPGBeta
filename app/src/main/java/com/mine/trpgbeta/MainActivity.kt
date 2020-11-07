@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         if(Build.VERSION.SDK_INT >= 23) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 3);
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 3)
             }
         }
         val layout0 = LinearLayout(this)
@@ -590,138 +590,302 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun showPassive() {
-        val dialog = AlertDialog.Builder(this)
+    fun showPassive() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("패시브확인")
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        val but1 = addButton("힘 패시브") {
-            showStPassive()
+        val meun = arrayOf("힘", "민첩", "체력", "운", "방어", "히든 패시브")
+        val listView = ListView(this)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meun)
+        listView.adapter = adapter
+        listView.onItemClickListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0) {
+                    showStPassive()
+                }
+                if (position == 1) {
+                    showSpPassive()
+                }
+                if (position == 2) {
+                    showHelPassive()
+                }
+                if (position == 3) {
+                    showLuPassive()
+                }
+                if (position == 4) {
+                    showDePassive()
+                }
+                if (position == 5) {
+                    showHiddenPassive()
+                }
+            }
         }
-        layout.addView(but1)
-        val but2 = addButton("민첩 패시브") {
-            showSpPassive()
-        }
-        layout.addView(but2)
-        val but3 = addButton("체력 패시브") {
-            showHpPassive()
-        }
-        layout.addView(but3)
-        val but4 = addButton("운 패시브") {
-            showLuPassive()
-        }
-        layout.addView(but4)
-        val but5 = addButton("방어 패시브") {
-            showDePassive()
-        }
-        layout.addView(but5)
-        val but6 = addButton("히든 패시브") {
-            showHiddenPassive()
-        }
-        layout.addView(but6)
+        layout.addView(listView)
+        builder.setView(layout)
+        builder.setNegativeButton("닫기", null)
+        builder.show()
+    }
 
-        dialog.setTitle("패시브 확인")
-        dialog.setView(layout)
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+    fun showStPassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.공격력 10증가 - ${`var`.passive[0][0]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """2.몬스터 처치시 최대체력의 2%회복 - ${`var`.passive[0][1]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """3.체력이 80%이상일때 공격력 20증가 - ${`var`.passive[0][2]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """4.타격시 5%확률로 상대를 2초간 기절시킨다 - ${`var`.passive[0][3]}""".trimIndent()
+        )
+        showDialog("패시브확인 - 힘", stringBuilder.toString())
     }
-    private fun showStPassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 힘")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    fun showSpPassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.공격속도 0.05초 감소 - ${`var`.passive[1][0]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """2.공격속도 0.2초 감소 - ${`var`.passive[1][1]}""".trimIndent()
+        )
+        showDialog("패시브확인 - 민첩", stringBuilder.toString())
     }
-    private fun showSpPassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 민첩")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    fun showHelPassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.체력 50증가 - ${`var`.passive[2][0]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """2.체력회복량 5로 증가 - ${`var`.passive[2][1]
+            }""".trimIndent()
+        )
+        showDialog("패시브확인 - 체력", stringBuilder.toString())
     }
-    private fun showHpPassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 체력")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    fun showLuPassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.크리티컬확률 2.5%증가 - ${`var`.passive[3][0]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """2.공격력 20증가 - ${`var`.passive[3][1]}""".trimIndent()
+        )
+        showDialog("패시브확인 - 운", stringBuilder.toString())
     }
-    private fun showLuPassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 운")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    fun showDePassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.방어력 5증가 - ${`var`.passive[4][0]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """2.체력 20증가 - ${`var`.passive[4][1]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """5.맞을때 1%의확률 데미지를 받지 않는다. - ${`var`.passive[4][2]}""".trimIndent()
+        )
+        stringBuilder.append(
+            """8.[방어5]의 확률이 5%로 늘어난다.${`var`.passive[4][3]}""".trimIndent()
+        )
+        showDialog("패시브확인 - 방어", stringBuilder.toString())
     }
-    private fun showDePassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 방어")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
-    }
-    private fun showHiddenPassive() {
-        val dialog = AlertDialog.Builder(this)
-        val str = StringBuffer();
-        dialog.setMessage(str)
-        dialog.setTitle("패시브 - 히든")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+
+    fun showHiddenPassive() {
+        val `var` = application as variable
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(
+            """1.레벨업을 할때마다 스탯 30지급 - ${`var`.passive[5][0]}""".trimIndent()
+        )
+        showDialog("패시브확인 - 히든", stringBuilder.toString())
     }
 
     private fun showInventoryList() {
-        val dialog = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        val but1 = addButton("인벤토리") {
-            showInventory()
-        }
+        builder.setView(layout)
+        val but1 = Button(this)
+        but1.text = "인벤토리"
+        but1.setOnClickListener { showInventory() }
         layout.addView(but1)
-        val but2 = addButton("포션 인벤토리") {
-            showPortionInventory()
-        }
+        val but2 = Button(this)
+        but2.text = "포션 인벤토리"
+        but2.setOnClickListener { showPortionInventory() }
         layout.addView(but2)
-
-        dialog.setView(layout)
-        dialog.setTitle("인벤토리")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        builder.setTitle("인벤토리 리스트")
+        builder.setNegativeButton("닫기", null)
+        builder.show()
     }
+
     private fun showInventory() {
-        val var1 = application as variable
-        val dialog = AlertDialog.Builder(this)
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        val listview = ListView(this)
+        val listView = ListView(this)
         val adapter = ArrayAdapter(
             applicationContext,
             android.R.layout.simple_list_item_1,
-            var1.inventory
+            `var`.inventory
         )
-        listview.adapter = adapter
-        layout.addView(listview)
-
-        dialog.setView(layout)
-        dialog.setTitle("인벤토리")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        listView.adapter = adapter
+        listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val item = parent.getItemAtPosition(position).toString()
+                val itemname = item.split(" - ".toRegex()).toTypedArray()[0]
+                val itemcount: Int = item.split(" - ".toRegex()).toTypedArray()[1].toInt()
+                if (itemname.contains("회복포션")) {
+                    val data1: Int = itemname.split("회복포션".toRegex()).toTypedArray()[0].toInt()
+                    val n1 = itemcount - 1
+                    if (data1 == 10) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[0] += 1
+                            toast("10회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 50) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[1] += 1
+                            toast("50회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 100) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[2] += 1
+                            toast("100회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 500) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[3] += 1
+                            toast("500회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 1000) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[4] += 1
+                            toast("1000회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 2000) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[5] += 1
+                            toast("2000회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                    if (data1 == 5000) {
+                        if (itemcount > 0) {
+                            `var`.itemcount[position] = n1
+                            `var`.portionCount[6] += 1
+                            toast("5000회복포션 1개를 가방에 넣었습니다", false)
+                        }
+                        if (itemcount == 0) {
+                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        layout.addView(listView)
+        builder.setView(layout)
+        builder.setTitle("인벤토리")
+        builder.setNegativeButton("닫기", null)
+        builder.show()
     }
+
     private fun showPortionInventory() {
-        val dialog = AlertDialog.Builder(this)
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-
-        dialog.setView(layout)
-        dialog.setTitle("포션 인벤토리")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        val portionName = arrayOfNulls<String>(7)
+        portionName[0] = "10회복포션 - " + `var`.portionCount[0]
+        portionName[1] = "50회복포션 - " + `var`.portionCount[1]
+        portionName[2] = "100회복포션 - " + `var`.portionCount[2]
+        portionName[3] = "500회복포션 - " + `var`.portionCount[3]
+        portionName[4] = "1000회복포션 - " + `var`.portionCount[4]
+        portionName[5] = "2000회복포션 - " + `var`.portionCount[5]
+        portionName[6] = "5000회복포션 - " + `var`.portionCount[6]
+        val listView = ListView(this)
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, portionName)
+        listView.adapter = adapter
+        listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val item = parent.getItemAtPosition(position).toString()
+                val itemname = item.split(" - ".toRegex()).toTypedArray()[0]
+                val itemcount: Int = item.split(" - ".toRegex()).toTypedArray()[1].toInt()
+                cheakUsePortion(itemname, itemcount, position)
+                adapter.notifyDataSetChanged()
+            }
+        layout.addView(listView)
+        builder.setView(layout)
+        builder.setTitle("포션 인벤토리")
+        builder.setNegativeButton("닫기", null)
+        builder.show()
     }
-    private fun cheakUsePortion() {
 
+    private fun cheakUsePortion(name: String, count: Int, pos: Int) {
+        val `var` = application as variable
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("포션 사용 확인")
+        builder.setMessage(
+            """
+            ${name}을 사용하시겠습니까?
+            남은 갯수: $count
+            """.trimIndent()
+        )
+        builder.setNegativeButton("취소", null)
+        builder.setPositiveButton("사용"
+        ) { dialog, which ->
+            val heal: Int = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
+            if (`var`.stat3[0] + heal <= `var`.stat3[1]) {
+                `var`.stat3[0] += (heal)
+                `var`.portionCount[pos] -= 1
+            }
+            if (`var`.stat3[0] + heal > `var`.stat3[1]) {
+                `var`.stat3[0] = (`var`.stat3[1])
+                `var`.portionCount[pos] -= 1
+            }
+            if (`var`.stat3[0] == `var`.stat3[1]) {
+                toast("이미 최대 체력입니다.", false)
+            }
+        }
+        builder.show()
     }
 
     private fun otherFun() {

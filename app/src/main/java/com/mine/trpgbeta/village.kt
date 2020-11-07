@@ -1,6 +1,7 @@
 package com.mine.trpgbeta
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -36,6 +37,10 @@ class village: AppCompatActivity() {
 
         val txt1 = addTextView("마을", 25, Color.BLACK, Gravity.CENTER)
         layout.addView(txt1)
+        val but1 = addButton("상점") {
+            val intent = Intent(applicationContext, shop::class.java)
+            startActivity(intent)
+        }
 
         val scroll = ScrollView(this)
         scroll.addView(layout)
