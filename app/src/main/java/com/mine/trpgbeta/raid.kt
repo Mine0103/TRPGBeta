@@ -183,7 +183,7 @@ class raid: AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        val but1 = addButton("드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/경험치: 500/돈: 5000") {
+        val but1 = addButton("드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/\n경험치: 500/돈: 5000") {
             moname = "드래곤"
             monster[0] = 5000
             monster[1] = 300
@@ -193,7 +193,7 @@ class raid: AppCompatActivity() {
             hunting()
         }
         layout.addView(but1)
-        val but2 = addButton("불의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/경험치: 500/돈: 5000") {
+        val but2 = addButton("불의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/\n경험치: 500/돈: 5000") {
             moname = "불의 드래곤"
             monster[0] = 8000
             monster[1] = 550
@@ -203,7 +203,7 @@ class raid: AppCompatActivity() {
             hunting()
         }
         layout.addView(but2)
-        val but3 = addButton("땅의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/경험치: 500/돈: 5000") {
+        val but3 = addButton("땅의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초\n경험치: 500/돈: 5000") {
             moname = "땅의 드래곤"
             monster[0] = 1200
             monster[1] = 400
@@ -215,10 +215,7 @@ class raid: AppCompatActivity() {
         layout.addView(but3)
         dialog.setView(layout)
         dialog.setTitle("사냥 - 레이드")
-        dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
-            huntingCheck()
-        }
-        dialog.setPositiveButton("나가기") { dialog, which ->
+        dialog.setNegativeButton("나가기") { dialog, which ->
             finish()
         }
         dialog.show()
@@ -362,7 +359,7 @@ class raid: AppCompatActivity() {
         }
         attsp = `var`.stat4[0].toInt() * 1000
         timer.schedule(tt1, attsp.toLong(), attsp.toLong())
-        timer.schedule(tt2, monster[2].toLong(), monster[2].toLong())
+        timer.schedule(tt2, monster[2]*1000.toLong(), monster[2]*1000.toLong())
         timer.schedule(tt3, 10, 10)
         timer.schedule(tt4, 10, 10)
     }
@@ -383,6 +380,9 @@ class raid: AppCompatActivity() {
                 `var`.stat1[1]+=exp
                 `var`.money+=money
                 finish()
+            }
+            runOnUiThread {
+                dialog.show()
             }
         }
     }
@@ -409,6 +409,9 @@ class raid: AppCompatActivity() {
             dialog.setPositiveButton(
                 "다시사냥"
             ) { dialog, which -> huntingCheck() }
+            runOnUiThread {
+                dialog.show()
+            }
         }
     }
 

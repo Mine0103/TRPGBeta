@@ -35,12 +35,13 @@ class village: AppCompatActivity() {
         setSupportActionBar(toolbar)
         layout0.addView(toolbar)
 
-        val txt1 = addTextView("마을", 25, Color.BLACK, Gravity.CENTER)
+        val txt1 = addTextView("마을", 25, Color.WHITE, Gravity.CENTER)
         layout.addView(txt1)
         val but1 = addButton("상점") {
             val intent = Intent(applicationContext, shop::class.java)
             startActivity(intent)
         }
+        layout.addView(but1)
 
         val scroll = ScrollView(this)
         scroll.addView(layout)

@@ -37,9 +37,9 @@ class variable: Application() {
         val n1: Int = itemname.size + 1
         val n2: Int = itemcount.size + 1
         val n3: Int = inventory.size+ 1
-        itemname = arrayOfNulls<String>(n1)
-        itemcount = arrayOfNulls<Int>(n2)
-        inventory = arrayOfNulls<String>(n3)
+        itemname = arrayOfNulls(n1)
+        itemcount = arrayOfNulls(n2)
+        inventory = arrayOfNulls(n3)
     }
     fun inventorySetting() {
         for (n in itemname.indices) {

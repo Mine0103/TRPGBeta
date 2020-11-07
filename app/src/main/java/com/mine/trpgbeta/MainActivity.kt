@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
     private var txt3: TextView? = null
     private var txt4: TextView? = null
     private var txt5: TextView? = null
-    private val sdcard = Environment.getExternalStorageDirectory().absolutePath;
+    private val sdcard = Environment.getExternalStorageDirectory().absolutePath
+    private var isStart = false
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,10 +153,13 @@ class MainActivity : AppCompatActivity() {
 
         val var1 = application as variable
         val preferences = getSharedPreferences("variable", MODE_PRIVATE)
-        readStat(preferences, var1)
-        readVariable(preferences, var1)
-        readInventory(preferences, var1)
-        readPortion(preferences, var1)
+        if(isStart) {
+            readStat(preferences, var1)
+            readVariable(preferences, var1)
+            readInventory(preferences, var1)
+            readPortion(preferences, var1)
+        }
+
     }
     private fun readStat(preferences: SharedPreferences, var1: variable) {
         var1.stat1[0] = preferences.getInt("stat1[0]", 1)
@@ -225,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         saveInventory(editor, `var`)
         savePortion(editor, `var`)
         editor.apply()
+        if(!isStart) isStart = true
         super.onStop()
     }
 
@@ -513,7 +518,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[1]+=1
-                but1.text = meuns[0];
+                but1.text = meuns[0]
                 txt1.text = "스탯: "+var1.stat2[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
@@ -525,7 +530,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[2]+=1
-                but2.text = meuns[0];
+                but2.text = meuns[1]
                 txt1.text = "스탯: "+var1.stat2[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
@@ -537,7 +542,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[3]+=1
-                but3.text = meuns[0];
+                but3.text = meuns[2]
                 txt1.text = "스탯: "+var1.stat2[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
@@ -549,7 +554,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[4]+=1
-                but2.text = meuns[0];
+                but4.text = meuns[3]
                 txt1.text = "스탯: "+var1.stat2[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
@@ -560,8 +565,8 @@ class MainActivity : AppCompatActivity() {
         but5.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
-                var1.stat2[2]+=1
-                but2.text = meuns[0];
+                var1.stat2[5]+=1
+                but5.text = meuns[4]
                 txt1.text = "스탯: "+var1.stat2[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
@@ -646,75 +651,74 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    fun showStPassive() {
+    private fun showStPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.공격력 10증가 - ${`var`.passive[0][0]}""".trimIndent()
+            """1.공격력 10증가 - ${`var`.passive[0][0]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """2.몬스터 처치시 최대체력의 2%회복 - ${`var`.passive[0][1]}""".trimIndent()
+            """2.몬스터 처치시 최대체력의 2%회복 - ${`var`.passive[0][1]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """3.체력이 80%이상일때 공격력 20증가 - ${`var`.passive[0][2]}""".trimIndent()
+            """3.체력이 80%이상일때 공격력 20증가 - ${`var`.passive[0][2]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """4.타격시 5%확률로 상대를 2초간 기절시킨다 - ${`var`.passive[0][3]}""".trimIndent()
+            """4.타격시 5%확률로 상대를 2초간 기절시킨다 - ${`var`.passive[0][3]}""".trimIndent()+"\n"
         )
         showDialog("패시브확인 - 힘", stringBuilder.toString())
     }
 
-    fun showSpPassive() {
+    private fun showSpPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.공격속도 0.05초 감소 - ${`var`.passive[1][0]}""".trimIndent()
+            """1.공격속도 0.05초 감소 - ${`var`.passive[1][0]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """2.공격속도 0.2초 감소 - ${`var`.passive[1][1]}""".trimIndent()
+            """2.공격속도 0.2초 감소 - ${`var`.passive[1][1]}""".trimIndent()+"\n"
         )
         showDialog("패시브확인 - 민첩", stringBuilder.toString())
     }
 
-    fun showHelPassive() {
+    private fun showHelPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.체력 50증가 - ${`var`.passive[2][0]}""".trimIndent()
+            """1.체력 50증가 - ${`var`.passive[2][0]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """2.체력회복량 5로 증가 - ${`var`.passive[2][1]
-            }""".trimIndent()
+            """2.체력회복량 5로 증가 - ${`var`.passive[2][1]}""".trimIndent()+"\n"
         )
         showDialog("패시브확인 - 체력", stringBuilder.toString())
     }
 
-    fun showLuPassive() {
+    private fun showLuPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.크리티컬확률 2.5%증가 - ${`var`.passive[3][0]}""".trimIndent()
+            """1.크리티컬확률 2.5%증가 - ${`var`.passive[3][0]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """2.공격력 20증가 - ${`var`.passive[3][1]}""".trimIndent()
+            """2.공격력 20증가 - ${`var`.passive[3][1]}""".trimIndent()+"\n"
         )
         showDialog("패시브확인 - 운", stringBuilder.toString())
     }
 
-    fun showDePassive() {
+    private fun showDePassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.방어력 5증가 - ${`var`.passive[4][0]}""".trimIndent()
+            """1.방어력 5증가 - ${`var`.passive[4][0]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """2.체력 20증가 - ${`var`.passive[4][1]}""".trimIndent()
+            """2.체력 20증가 - ${`var`.passive[4][1]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """5.맞을때 1%의확률 데미지를 받지 않는다. - ${`var`.passive[4][2]}""".trimIndent()
+            """5.맞을때 1%의확률 데미지를 받지 않는다. - ${`var`.passive[4][2]}""".trimIndent()+"\n"
         )
         stringBuilder.append(
-            """8.[방어5]의 확률이 5%로 늘어난다.${`var`.passive[4][3]}""".trimIndent()
+            """8.[방어5]의 확률이 5%로 늘어난다.${`var`.passive[4][3]}""".trimIndent()+"\n"
         )
         showDialog("패시브확인 - 방어", stringBuilder.toString())
     }

@@ -49,6 +49,14 @@ class shop : AppCompatActivity() {
         timer1()
     }
 
+    private fun toast(msg: String, isLong: Boolean) {
+        if(isLong) {
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun addButton(text: String?, listener: View.OnClickListener?): Button {
         val btn = Button(this)
         btn.text = text
@@ -104,14 +112,14 @@ class shop : AppCompatActivity() {
         listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             val data = parent.getItemAtPosition(position).toString()
             val name = data.split(" - ".toRegex()).toTypedArray()[0]
-            val num1 = number(name.split("회복포션".toRegex()).toTypedArray()[0])
-            val money = number(data.split(" - ".toRegex()).toTypedArray()[1].split("원".toRegex()).toTypedArray()[0])
+            val num1 = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
+            val money = data.split(" - ".toRegex()).toTypedArray()[1].split("원".toRegex()).toTypedArray()[0].toInt()
+            toast((`var`.money >= money).toString(), true)
             if (`var`.money >= money) {
                 buyPortion(num1)
                 `var`.money -= money
                 builder.setMessage("돈: $money")
-            }
-            if (`var`.money < money) {
+            } else {
                 showDialog("알림", "돈이 부족합니다.")
             }
         }
@@ -123,24 +131,26 @@ class shop : AppCompatActivity() {
 
     private fun buyPortion(n1: Int) {
         val `var` = application as variable
-        var insize = `var`.insize
+        var inSize = `var`.insize
         val name = n1.toString() + "회복포션"
-        for (i in 0 until insize) {
-            if (`var`.itemname[i] === name) {
-                val c1 = `var`.itemcount[i]?.plus(1)
-                `var`.itemcount[i] = c1
-            } else if (`var`.itemname[i] !== name) {
-                `var`.addInsize()
-                insize = `var`.insize
-                `var`.itemname[insize-1] = n1.toString() + "회복포션"
-                `var`.itemcount[insize-1] = 1
+        if(inSize==0) {
+            `var`.addInsize()
+            `var`.itemname[0] = name
+            `var`.itemcount[0] = 1
+        } else {
+            for(i in 0 until inSize) {
+                if(`var`.itemname[i] == name) {
+                    `var`.itemcount[i]?.plus(1)
+                } else {
+                    `var`.addInsize()
+                    inSize = `var`.insize
+                    `var`.itemname[inSize] = name
+                    `var`.itemcount[inSize] = 1
+                }
             }
+
         }
         return
-    }
-
-    private fun number(s: String): Int {
-        return s.toInt()
     }
 
     private fun showDialog(title: String?, msg: String?) {

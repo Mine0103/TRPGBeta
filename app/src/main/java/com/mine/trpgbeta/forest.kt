@@ -480,7 +480,7 @@ class forest: AppCompatActivity() {
         }
         attsp = `var`.stat4[0].toInt() * 1000
         timer.schedule(tt1, attsp.toLong(), attsp.toLong())
-        timer.schedule(tt2, monster[2].toLong(), monster[2].toLong())
+        timer.schedule(tt2, monster[2]*1000.toLong(), monster[2]*1000.toLong())
         timer.schedule(tt3, 10, 10)
         timer.schedule(tt4, 10, 10)
     }
@@ -501,6 +501,9 @@ class forest: AppCompatActivity() {
                 `var`.stat1[1]+=exp
                 `var`.money+=money
                 finish()
+            }
+            runOnUiThread {
+                dialog.show()
             }
         }
     }
@@ -527,6 +530,9 @@ class forest: AppCompatActivity() {
             dialog.setPositiveButton(
                 "다시사냥"
             ) { dialog, which -> huntingCheck() }
+            runOnUiThread {
+                dialog.show()
+            }
         }
     }
 
