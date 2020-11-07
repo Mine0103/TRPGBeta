@@ -148,7 +148,6 @@ class shop : AppCompatActivity() {
                     `var`.itemcount[inSize] = 1
                 }
             }
-
         }
         return
     }
