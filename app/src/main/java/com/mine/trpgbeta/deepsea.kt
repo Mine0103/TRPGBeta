@@ -253,7 +253,7 @@ class deepsea: AppCompatActivity() {
             info.append("돈: " + monster[4] + " ")
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
-        dialog.setTitle("사냥 - 들판")
+        dialog.setTitle("사냥 - 심해")
         dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
             huntingCheck()
         }
@@ -327,7 +327,7 @@ class deepsea: AppCompatActivity() {
             info.append("돈: " + monster[4] + " ")
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
-        dialog.setTitle("사냥 - 들판")
+        dialog.setTitle("사냥 - 심해")
         dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
             huntingCheck()
         }

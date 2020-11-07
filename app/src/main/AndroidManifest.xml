@@ -27,6 +27,9 @@
         </activity>
         <activity android:name=".MainActivity" android:screenOrientation="portrait" />
         <activity android:name=".field" android:screenOrientation="portrait"/>
+        <activity android:name=".forest" android:screenOrientation="portrait" />
+        <activity android:name=".deepsea" android:screenOrientation="portrait" />
+        <activity android:name=".volcano" android:screenOrientation="portrait" />
         <activity android:name=".raid" android:screenOrientation="portrait"/>
         <activity android:name=".village" android:screenOrientation="portrait"/>
         <activity android:name=".shop" android:screenOrientation="portrait" />

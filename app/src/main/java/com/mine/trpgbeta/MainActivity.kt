@@ -579,10 +579,30 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val but1 = addButton("들판") {
-            val intent = Intent(applicationContext, field::class.java);
+            val intent = Intent(applicationContext, field::class.java)
             startActivity(intent)
         }
         layout.addView(but1)
+        val but2 = addButton("숲") {
+            val intent = Intent(applicationContext, forest::class.java)
+            startActivity(intent)
+        }
+        layout.addView(but2)
+        val but3 = addButton("심해") {
+            val intent = Intent(applicationContext, deepsea::class.java)
+            startActivity(intent)
+        }
+        layout.addView(but3)
+        val but4 = addButton("화산") {
+            val intent = Intent(applicationContext, volcano::class.java)
+            startActivity(intent)
+        }
+        layout.addView(but4)
+        val raid = addButton("레이드") {
+            val intent = Intent(applicationContext, raid::class.java);
+            startActivity(intent)
+        }
+        layout.addView(raid)
 
         dialog.setView(layout)
         dialog.setTitle("사냥")
@@ -590,7 +610,7 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    fun showPassive() {
+    private fun showPassive() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("패시브확인")
         val layout = LinearLayout(this)
@@ -599,8 +619,8 @@ class MainActivity : AppCompatActivity() {
         val listView = ListView(this)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meun)
         listView.adapter = adapter
-        listView.onItemClickListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
                 if (position == 0) {
                     showStPassive()
                 }
@@ -620,7 +640,6 @@ class MainActivity : AppCompatActivity() {
                     showHiddenPassive()
                 }
             }
-        }
         layout.addView(listView)
         builder.setView(layout)
         builder.setNegativeButton("닫기", null)
