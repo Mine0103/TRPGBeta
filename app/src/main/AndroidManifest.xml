@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         tools:ignore="HardcodedDebugMode">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7018804882363864~1353204450" />
+
         <activity
             android:name=".intro"
             android:screenOrientation="portrait">
@@ -33,6 +38,8 @@
         <activity android:name=".raid" android:screenOrientation="portrait"/>
         <activity android:name=".village" android:screenOrientation="portrait"/>
         <activity android:name=".shop" android:screenOrientation="portrait" />
+
+        <activity android:name=".login" android:screenOrientation="portrait" />
         <meta-data android:name="android.arch.lifecycle.VERSION" android:value="27.0.0-SNAPSHOT"/>
     </application>
 </manifest>

@@ -11,6 +11,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,6 +19,7 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +31,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import java.io.*
 import java.util.*
 import kotlin.math.ceil
@@ -44,6 +48,43 @@ class MainActivity : AppCompatActivity() {
     private var txt5: TextView? = null
     private val sdcard = Environment.getExternalStorageDirectory().absolutePath
     private var isStart = false
+    private var plusatt = arrayOf(
+        intArrayOf(0, 0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0)
+    )
+    private var minusattap = arrayOf(
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0)
+    )
+    private var plusHp = arrayOf(
+        intArrayOf(0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0),
+        intArrayOf(0, 0)
+    )
+    private var pluscrit = arrayOf(
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0)
+    )
+    private var plusdef = arrayOf(
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0),
+        doubleArrayOf(0.0, 0.0)
+    )
+    private var am: AssetManager? = null
+    var ip: InputStream? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,12 +153,16 @@ class MainActivity : AppCompatActivity() {
         }
         meun.width = windowManager.defaultDisplay.width/2
         lay2.addView(meun)
+        val loginBut = addButton("로그인") {
+            val intent = Intent(applicationContext, login::class.java)
+            startActivity(intent)
+        }
 
         layout.addView(lay1)
         layout.addView(lay2)
 
         val info = addTextView(
-            "\n\nby.mine V1.0.0.11\nCopyright (c) 2020. mine. All rights reserved. ",
+            "\n\nby.mine V1.0.0.13\nCopyright (c) 2020. mine. All rights reserved. ",
             15,
             Color.WHITE,
             Gravity.CENTER
@@ -145,9 +190,52 @@ class MainActivity : AppCompatActivity() {
         bnl.setBackgroundColor(Color.TRANSPARENT)
         drawer!!.addView(bnl)
 
+        val adLayout = LinearLayout(this)
+        adLayout.orientation = LinearLayout.VERTICAL
+        val mAdView = AdView(this)
+        mAdView.adSize = AdSize.BANNER
+        mAdView.adUnitId = "ca-app-pub-7018804882363864/9141372167"
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+        adLayout.addView(mAdView)
+
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                // 광고가 문제 없이 로드시 출력됩니다.
+            }
+
+            override fun onAdFailedToLoad(errorCode: Int) {
+                // Code to be executed when an ad request fails.
+                // 광고 로드에 문제가 있을시 출력됩니다.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+        }
+
+        drawer!!.addView(adLayout)
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
+
+        am = resources.assets
 
         timer1()
 
@@ -408,8 +496,12 @@ class MainActivity : AppCompatActivity() {
                 setText()
                 setStat()
                 levelUp()
+                setExp()
                 var1.inventorySetting()
                 var1.setInventory()
+                setPassive1()
+                setPassive2()
+                setHiddenPassive()
             }
         }
         val tt2: TimerTask = object : TimerTask() {
@@ -444,17 +536,41 @@ class MainActivity : AppCompatActivity() {
         var1.stat5[1] = (1+ floor(var1.stat2[7].toDouble())).toInt()
     }
     private fun levelUp() {
-        val var1 = application as variable
-        val n1 = (floor(((var1.stat1[0] - 1) / 9).toDouble()) + 1).toInt() * 10
-        if (var1.stat1[1] >= var1.stat1[2]) {
-            var1.stat1[0]+=1
-            var1.stat1[1]-=var1.stat1[2]
-            var1.stat1[2]+=n1
-            var1.stat2[0]+=5
-            /*if (var1.getHiddenPassive(0)) {
-                var1.addstat(25)
-            }*/
+        val `var` = application as variable
+        val n1 = (floor(((`var`.stat1[0] - 1) / 9).toDouble()) + 1).toInt() * 10
+        if (`var`.stat1[1] >= `var`.stat1[2]) {
+            `var`.stat1[1]-=(`var`.stat1[2])
+            `var`.stat1[0]+=1
+            `var`.stat1[2]+=n1
+            `var`.stat2[0]+=5
+            if (`var`.hiddenPassive[0]) {
+                `var`.stat2[0]+=25
+            }
         }
+    }
+    private fun setExp() {
+        val var1 = application as variable
+        val exp = arrayOf(0)
+        /*try {
+            ip = am?.open("exp.txt")
+            val data = ip.toString().split("\n")
+            for(i in data.indices) {
+                val lv = data[i].split("::")[0].toInt()
+                val exp = data[i].split("::")[1].toInt()
+                toast("$lv::$exp", false)
+                /*if(var1.stat1[0]==lv) {
+                    var1.stat1[2] = exp
+                }*/
+            }
+        } catch (e: Exception) {
+             //e.printStackTrace()
+        }
+        try {
+            ip?.close()
+        } catch (e: Exception) {
+            //e.printStackTrace()
+        }*/
+
     }
     private fun healing() {
         val var1 = application as variable
@@ -467,6 +583,101 @@ class MainActivity : AppCompatActivity() {
             var1.stat3[2] = var1.stat3[3]
         } else {
             var1.stat3[2]+=var1.stat5[1]
+        }
+    }
+
+    fun setPassive1() {
+        val var1 = application as variable
+
+        if(var1.stat2[1]>=50) {
+            var1.passive[0][0] = true
+        }
+        if(var1.stat2[1]>=100) {
+            var1.passive[0][1] = true
+        }
+        if(var1.stat2[1]>=150) {
+            var1.passive[0][2] = true
+        }
+        if(var1.stat2[1]>=200) {
+            var1.passive[0][3] = true
+        }
+
+        if(var1.stat2[2]>=50) {
+            var1.passive[1][0] = true
+        }
+        if(var1.stat2[2]>=100) {
+            var1.passive[1][1] = true
+        }
+
+        if(var1.stat2[3]>=50) {
+            var1.passive[2][0] = true
+        }
+        if(var1.stat2[3]>=100) {
+            var1.passive[2][1] = true
+        }
+
+        if(var1.stat2[4]>=50) {
+            var1.passive[3][0] = true
+        }
+        if(var1.stat2[4]>=100) {
+            var1.passive[3][1] = true
+        }
+
+        if(var1.stat2[5]>=50) {
+            var1.passive[4][0] = true
+        }
+        if(var1.stat2[5]>=100) {
+            var1.passive[4][1] = true
+        }
+        if(var1.stat2[5]>=250) {
+            var1.passive[4][4] = true
+        }
+        if(var1.stat2[5]>=400) {
+            var1.passive[4][7] = true
+        }
+    }
+    fun setPassive2() {
+        val var1 = application as variable
+
+        if(var1.passive[0][0]) {
+            plusatt[0][0] = 10
+        }
+        if(var1.passive[0][2]) {
+            val hel = floor(var1.stat3[1] * 0.8).toInt()
+            if (var1.stat3[1] >= hel) {
+                plusatt[0][2] = 20
+            }
+        }
+
+        if (var1.passive[1][0]) {
+            minusattap[1][0] = 0.05
+        }
+        if (var1.passive[1][1]) {
+            minusattap[1][1] = 0.2
+        }
+
+        if (var1.passive[2][0]) {
+            plusHp[2][0] = 50
+        }
+
+        if (var1.passive[3][0]) {
+            pluscrit[3][0] = 2.5
+        }
+        if (var1.passive[3][1]) {
+            plusatt[3][1] = 20
+        }
+
+        if (var1.passive[4][0]) {
+            plusdef[4][0] = 5.0
+        }
+        if (var1.passive[4][1]) {
+            plusHp[4][1] = 20
+        }
+    }
+    fun setHiddenPassive() {
+        val var1 = application as variable
+        if(var1.stat2[1]>=200&&var1.stat2[2]>=200&&var1.stat2[3]>=200&&var1.stat2[4]>=200&&var1.stat2[5]>=200) {
+            var1.hiddenPassive[0] = true
         }
     }
 
@@ -650,84 +861,78 @@ class MainActivity : AppCompatActivity() {
         builder.setNegativeButton("닫기", null)
         builder.show()
     }
-
     private fun showStPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.공격력 10증가 - ${`var`.passive[0][0]}""".trimIndent()+"\n"
+            """1.공격력 10증가 - ${`var`.passive[0][0]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """2.몬스터 처치시 최대체력의 2%회복 - ${`var`.passive[0][1]}""".trimIndent()+"\n"
+            """2.몬스터 처치시 최대체력의 2%회복 - ${`var`.passive[0][1]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """3.체력이 80%이상일때 공격력 20증가 - ${`var`.passive[0][2]}""".trimIndent()+"\n"
+            """3.체력이 80%이상일때 공격력 20증가 - ${`var`.passive[0][2]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """4.타격시 5%확률로 상대를 2초간 기절시킨다 - ${`var`.passive[0][3]}""".trimIndent()+"\n"
+            """4.타격시 5%확률로 상대를 2초간 기절시킨다 - ${`var`.passive[0][3]}""".trimIndent() + "\n"
         )
         showDialog("패시브확인 - 힘", stringBuilder.toString())
     }
-
     private fun showSpPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.공격속도 0.05초 감소 - ${`var`.passive[1][0]}""".trimIndent()+"\n"
+            """1.공격속도 0.05초 감소 - ${`var`.passive[1][0]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """2.공격속도 0.2초 감소 - ${`var`.passive[1][1]}""".trimIndent()+"\n"
+            """2.공격속도 0.2초 감소 - ${`var`.passive[1][1]}""".trimIndent() + "\n"
         )
         showDialog("패시브확인 - 민첩", stringBuilder.toString())
     }
-
     private fun showHelPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.체력 50증가 - ${`var`.passive[2][0]}""".trimIndent()+"\n"
+            """1.체력 50증가 - ${`var`.passive[2][0]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """2.체력회복량 5로 증가 - ${`var`.passive[2][1]}""".trimIndent()+"\n"
+            """2.체력회복량 5로 증가 - ${`var`.passive[2][1]}""".trimIndent() + "\n"
         )
         showDialog("패시브확인 - 체력", stringBuilder.toString())
     }
-
     private fun showLuPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.크리티컬확률 2.5%증가 - ${`var`.passive[3][0]}""".trimIndent()+"\n"
+            """1.크리티컬확률 2.5%증가 - ${`var`.passive[3][0]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """2.공격력 20증가 - ${`var`.passive[3][1]}""".trimIndent()+"\n"
+            """2.공격력 20증가 - ${`var`.passive[3][1]}""".trimIndent() + "\n"
         )
         showDialog("패시브확인 - 운", stringBuilder.toString())
     }
-
     private fun showDePassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.방어력 5증가 - ${`var`.passive[4][0]}""".trimIndent()+"\n"
+            """1.방어력 5증가 - ${`var`.passive[4][0]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """2.체력 20증가 - ${`var`.passive[4][1]}""".trimIndent()+"\n"
+            """2.체력 20증가 - ${`var`.passive[4][1]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """5.맞을때 1%의확률 데미지를 받지 않는다. - ${`var`.passive[4][2]}""".trimIndent()+"\n"
+            """5.맞을때 1%의확률 데미지를 받지 않는다. - ${`var`.passive[4][2]}""".trimIndent() + "\n"
         )
         stringBuilder.append(
-            """8.[방어5]의 확률이 5%로 늘어난다.${`var`.passive[4][3]}""".trimIndent()+"\n"
+            """8.[방어5]의 확률이 5%로 늘어난다.${`var`.passive[4][3]}""".trimIndent() + "\n"
         )
         showDialog("패시브확인 - 방어", stringBuilder.toString())
     }
-
-    fun showHiddenPassive() {
+    private fun showHiddenPassive() {
         val `var` = application as variable
         val stringBuilder = StringBuilder()
         stringBuilder.append(
-            """1.레벨업을 할때마다 스탯 30지급 - ${`var`.passive[5][0]}""".trimIndent()
+            """1.레벨업을 할때마다 스탯 30지급 - ${`var`.hiddenPassive[0]}""".trimIndent()
         )
         showDialog("패시브확인 - 히든", stringBuilder.toString())
     }
@@ -893,7 +1098,8 @@ class MainActivity : AppCompatActivity() {
             """.trimIndent()
         )
         builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("사용"
+        builder.setPositiveButton(
+            "사용"
         ) { dialog, which ->
             val heal: Int = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
             if (`var`.stat3[0] + heal <= `var`.stat3[1]) {

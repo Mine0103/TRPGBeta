@@ -17,6 +17,7 @@ class variable: Application() {
         booleanArrayOf(false, false),
         booleanArrayOf(false, false, false, false, false, false, false, false)
     )
+    var hiddenPassive = arrayOf(false)
     //레벨, 현 경험치, 요구 경험치
     var stat1: Array<Int> = arrayOf(1, 0, 10)
     //스탯 힘 민첩 체력 운 방어 지능 지혜

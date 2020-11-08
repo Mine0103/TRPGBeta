@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "995962070759",
+    "firebase_url": "https://trpgbeta.firebaseio.com",
+    "project_id": "trpgbeta",
+    "storage_bucket": "trpgbeta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995962070759:android:8a37d4680a271668992442",
+        "android_client_info": {
+          "package_name": "com.mine.trpgbeta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995962070759-6sheaqielr6qtiv8ddgmo1p4tad48s9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcjxqhl7NkBIyMZma-5Nmi3wX21GxuUIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995962070759-6sheaqielr6qtiv8ddgmo1p4tad48s9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.LinearLayout
+import com.google.android.gms.ads.MobileAds
 import java.util.*
 
 class intro: AppCompatActivity() {
     var tt1: TimerTask? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this)
         val layout = LinearLayout(this)
         layout.setBackgroundResource(R.drawable.intro)
         setContentView(layout)

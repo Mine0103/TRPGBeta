@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -10,8 +11,9 @@ android {
         applicationId "com.mine.trpgbeta"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.0.0.11"
+        multiDexEnabled true
+        versionCode 13
+        versionName "1.0.0.13"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -37,4 +39,9 @@ dependencies {
     //noinspection GradleCompatible
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
+    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
