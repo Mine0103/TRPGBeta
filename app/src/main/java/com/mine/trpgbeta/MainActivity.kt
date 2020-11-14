@@ -32,7 +32,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
+import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdCallback
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.mine.trpgbeta.hunting.*
+import com.mine.trpgbeta.village.village
 import java.io.*
 import java.util.*
 import kotlin.math.ceil
@@ -84,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         doubleArrayOf(0.0, 0.0)
     )
     private var am: AssetManager? = null
-    var ip: InputStream? = null
+    private var mAdView: AdView? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,6 +126,14 @@ class MainActivity : AppCompatActivity() {
         lay1.weightSum = 0.5f
         val lay2 = LinearLayout(this)
         lay2.orientation = LinearLayout.HORIZONTAL
+        val scroll = ScrollView(this)
+        scroll.addView(layout)
+        layout0.addView(scroll)
+        drawer = DrawerLayout(this)
+        drawer!!.addView(layout0)
+        val layout2 = createDrawerLayout()
+        drawer!!.addView(layout2)
+        drawer!!.setBackgroundResource(R.drawable.background)
         val but1 = addButton("스탯") {
             stat1()
         }
@@ -157,6 +171,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, login::class.java)
             startActivity(intent)
         }
+        val adtest = addButton("광고 테스트") {
+
+        }
 
         layout.addView(lay1)
         layout.addView(lay2)
@@ -169,15 +186,6 @@ class MainActivity : AppCompatActivity() {
         )
         layout.addView(info)
 
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-
         val bnl = BottomNavigationLayout(this)
         bnl.addBottomButton(
             "포션",
@@ -188,18 +196,23 @@ class MainActivity : AppCompatActivity() {
             showPortionInventory()
         }
         bnl.setBackgroundColor(Color.TRANSPARENT)
-        drawer!!.addView(bnl)
+        val bnlLayout = LinearLayout(this)
+        bnlLayout.addView(bnl)
+        drawer!!.addView(bnlLayout)
 
         val adLayout = LinearLayout(this)
         adLayout.orientation = LinearLayout.VERTICAL
-        val mAdView = AdView(this)
-        mAdView.adSize = AdSize.BANNER
-        mAdView.adUnitId = "ca-app-pub-7018804882363864/9141372167"
+        adLayout.gravity = Gravity.BOTTOM
+        mAdView = AdView(this)
+        mAdView!!.adSize = AdSize.BANNER
+        //mAdView!!.adUnitId = "ca-app-pub-7018804882363864/9141372167"
+        mAdView!!.adUnitId = "ca-app-pub-3940256099942544/6300978111"
         val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
+        mAdView!!.loadAd(adRequest)
         adLayout.addView(mAdView)
 
-        mAdView.adListener = object : AdListener() {
+        /*mAdView!!.adListener = object : AdListener() {
+
             override fun onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
                 // 광고가 문제 없이 로드시 출력됩니다.
@@ -208,6 +221,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAdFailedToLoad(errorCode: Int) {
                 // Code to be executed when an ad request fails.
                 // 광고 로드에 문제가 있을시 출력됩니다.
+                toast(errorCode.toString(), false)
             }
 
             override fun onAdOpened() {
@@ -228,9 +242,9 @@ class MainActivity : AppCompatActivity() {
                 // to the app after tapping on an ad.
             }
 
-        }
+        }*/
 
-        drawer!!.addView(adLayout)
+        //drawer!!.addView(adLayout)
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
@@ -814,6 +828,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         layout.addView(but4)
+        val but5 = addButton("눈의 언덕") {
+            val intent = Intent(applicationContext, SnowHill::class.java)
+            startActivity(intent)
+        }
+        layout.addView(but5)
         val raid = addButton("레이드") {
             val intent = Intent(applicationContext, raid::class.java);
             startActivity(intent)

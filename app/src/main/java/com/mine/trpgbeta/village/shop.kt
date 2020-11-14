@@ -1,4 +1,10 @@
-package com.mine.trpgbeta
+/*
+ * Create by mine on 2020. 11. 13.
+ * Copyright (c) 2020. mine. All rights reserved.
+ *
+ */
+
+package com.mine.trpgbeta.village
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -12,6 +18,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import com.mine.trpgbeta.R
+import com.mine.trpgbeta.variable
 import java.util.*
 
 class shop : AppCompatActivity() {

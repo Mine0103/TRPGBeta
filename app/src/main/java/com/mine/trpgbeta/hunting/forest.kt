@@ -4,7 +4,7 @@
  *
  */
 
-package com.mine.trpgbeta
+package com.mine.trpgbeta.hunting
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -22,6 +22,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.mine.trpgbeta.BottomNavigationLayout
+import com.mine.trpgbeta.R
+import com.mine.trpgbeta.variable
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor

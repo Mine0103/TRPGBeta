@@ -1,4 +1,10 @@
-package com.mine.trpgbeta
+/*
+ * Create by mine on 2020. 11. 13.
+ * Copyright (c) 2020. mine. All rights reserved.
+ *
+ */
+
+package com.mine.trpgbeta.village
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -15,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.mine.trpgbeta.R
 import kotlin.math.ceil
 
 class village: AppCompatActivity() {

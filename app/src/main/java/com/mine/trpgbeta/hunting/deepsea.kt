@@ -4,7 +4,7 @@
  *
  */
 
-package com.mine.trpgbeta
+package com.mine.trpgbeta.hunting
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -22,11 +22,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.mine.trpgbeta.BottomNavigationLayout
+import com.mine.trpgbeta.R
+import com.mine.trpgbeta.variable
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class raid: AppCompatActivity() {
+class deepsea: AppCompatActivity() {
     private var moname = ""
     //체력 공격력 공격속도 경험치 돈
     private var monster: Array<Int> = arrayOf(0, 0, 0, 0, 0)
@@ -85,7 +88,7 @@ class raid: AppCompatActivity() {
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
-        huntingCheck()
+        huntingCheck1()
     }
     @SuppressLint("RtlHardcoded", "SetTextI18n")
     private fun createDrawerLayout(): LinearLayout? {
@@ -179,43 +182,164 @@ class raid: AppCompatActivity() {
     private fun getRippleDrawable(): RippleDrawable? {
         return RippleDrawable(ColorStateList.valueOf(Color.LTGRAY), ColorDrawable(Color.GRAY), null)
     }
+    private fun huntingCheck1() {
+        val dialog = AlertDialog.Builder(this)
+        val info = StringBuffer()
+        monran = floor(Math.random() * 100).toInt()+1
+        if(monran==1) {
+            moname = "미믹(H)"
+            monster[0] = 30000
+            monster[1] = 1
+            monster[2] = 5
+            monster[3] = 2000
+            monster[4] = 10000
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 2..50) {
+            moname = "상어"
+            monster[0] = 100
+            monster[1] = 75
+            monster[2] = 5
+            monster[3] = 50
+            monster[4] = 100
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 51..80) {
+            moname = "고래"
+            monster[0] = 300
+            monster[1] = 50
+            monster[2] = 5
+            monster[3] = 75
+            monster[4] = 175
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 81..95) {
+            moname = "고래상어"
+            monster[0] = 500
+            monster[1] = 75
+            monster[2] = 5
+            monster[3] = 120
+            monster[4] = 300
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 96..100) {
+            moname = "메갈로돈(B)"
+            monster[0] = 750
+            monster[1] = 200
+            monster[2] = 5
+            monster[3] = 250
+            monster[4] = 550
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        dialog.setTitle("사냥 - 심해")
+        dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
+            huntingCheck()
+        }
+        dialog.setPositiveButton("싸우기") { dialog, which ->
+            toast(monster[0].toString(), true)
+            isHunting = true
+            hunting()
+        }
+        dialog.setNeutralButton("나가기") { dialog, which ->
+            finish()
+        }
+        dialog.show()
+    }
     private fun huntingCheck() {
         val dialog = AlertDialog.Builder(this)
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val but1 = addButton("드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/\n경험치: 500/돈: 5000") {
-            moname = "드래곤"
-            monster[0] = 5000
-            monster[1] = 300
-            monster[2] = 3
-            monster[3] = 500
-            monster[4] = 5000
+        val info = StringBuffer()
+        monran = floor(Math.random() * 100).toInt()+1
+        if(monran in 1..50) {
+            moname = "상어"
+            monster[0] = 100
+            monster[1] = 75
+            monster[2] = 5
+            monster[3] = 50
+            monster[4] = 100
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 51..80) {
+            moname = "고래"
+            monster[0] = 300
+            monster[1] = 50
+            monster[2] = 5
+            monster[3] = 75
+            monster[4] = 175
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 81..95) {
+            moname = "고래상어"
+            monster[0] = 500
+            monster[1] = 75
+            monster[2] = 5
+            monster[3] = 120
+            monster[4] = 300
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        if(monran in 96..100) {
+            moname = "메갈로돈(B)"
+            monster[0] = 750
+            monster[1] = 200
+            monster[2] = 5
+            monster[3] = 250
+            monster[4] = 550
+            info.append("체력: " + monster[0] + " ")
+            info.append("공격력: " + monster[1] + " ")
+            info.append("공격속도: " + monster[2] + "초 ")
+            info.append("경험지: " + monster[3] + " ")
+            info.append("돈: " + monster[4] + " ")
+            dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
+        }
+        dialog.setTitle("사냥 - 심해")
+        dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
+            huntingCheck()
+        }
+        dialog.setPositiveButton("싸우기") { dialog, which ->
+            toast(monster[0].toString(), true)
+            isHunting = true
             hunting()
         }
-        layout.addView(but1)
-        val but2 = addButton("불의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초/\n경험치: 500/돈: 5000") {
-            moname = "불의 드래곤"
-            monster[0] = 8000
-            monster[1] = 550
-            monster[2] = 3
-            monster[3] = 1000
-            monster[4] = 35000
-            hunting()
-        }
-        layout.addView(but2)
-        val but3 = addButton("땅의 드래곤\n체력: 5000/공격력: 1000/공격속도: 3초\n경험치: 500/돈: 5000") {
-            moname = "땅의 드래곤"
-            monster[0] = 1200
-            monster[1] = 400
-            monster[2] = 3
-            monster[3] = 1500
-            monster[4] = 20000
-            hunting()
-        }
-        layout.addView(but3)
-        dialog.setView(layout)
-        dialog.setTitle("사냥 - 레이드")
-        dialog.setNegativeButton("나가기") { dialog, which ->
+        dialog.setNeutralButton("나가기") { dialog, which ->
             finish()
         }
         dialog.show()
