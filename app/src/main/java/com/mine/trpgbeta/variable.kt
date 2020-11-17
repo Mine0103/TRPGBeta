@@ -162,5 +162,12 @@ class variable: Application() {
         inventory = arrayOfNulls<String>(0)
         insize = 0
         portionCount = arrayOf(0, 0, 0, 0, 0, 0, 0)
+        equipmentName = arrayOf(
+            "나뭇가지\n레벨제한:1 공격력:2 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0",
+            "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0",
+            "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0",
+            "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0",
+            "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0"
+        )
     }
 }
