@@ -201,12 +201,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 2..50) {
-            moname = ""
-            monster[0] = 100
-            monster[1] = 75
+            moname = "얼음 정령"
+            monster[0] = 1000
+            monster[1] = 300
             monster[2] = 5
-            monster[3] = 50
-            monster[4] = 100
+            monster[3] = 500
+            monster[4] = 1500
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -215,12 +215,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 51..80) {
-            moname = ""
-            monster[0] = 300
-            monster[1] = 50
+            moname = "설인"
+            monster[0] = 1750
+            monster[1] = 550
             monster[2] = 5
-            monster[3] = 75
-            monster[4] = 175
+            monster[3] = 800
+            monster[4] = 2500
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -229,12 +229,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 81..95) {
-            moname = ""
-            monster[0] = 500
-            monster[1] = 75
+            moname = "예티"
+            monster[0] = 2500
+            monster[1] = 1200
             monster[2] = 5
-            monster[3] = 120
-            monster[4] = 300
+            monster[3] = 1500
+            monster[4] = 6000
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -243,12 +243,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 96..100) {
-            moname = ""
-            monster[0] = 750
-            monster[1] = 200
+            moname = "얼음 드래곤"
+            monster[0] = 4500
+            monster[1] = 1750
             monster[2] = 5
-            monster[3] = 250
-            monster[4] = 550
+            monster[3] = 2750
+            monster[4] = 10000
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -256,7 +256,7 @@ class SnowHill: AppCompatActivity() {
             info.append("돈: " + monster[4] + " ")
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
-        dialog.setTitle("사냥 - 심해")
+        dialog.setTitle("사냥 - 눈의 언덕")
         dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
             huntingCheck()
         }
@@ -275,12 +275,12 @@ class SnowHill: AppCompatActivity() {
         val info = StringBuffer()
         monran = floor(Math.random() * 100).toInt()+1
         if(monran in 1..50) {
-            moname = ""
-            monster[0] = 100
-            monster[1] = 75
+            moname = "얼음 정령"
+            monster[0] = 1000
+            monster[1] = 300
             monster[2] = 5
-            monster[3] = 50
-            monster[4] = 100
+            monster[3] = 500
+            monster[4] = 1500
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -289,12 +289,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 51..80) {
-            moname = ""
-            monster[0] = 300
-            monster[1] = 50
+            moname = "설인"
+            monster[0] = 1750
+            monster[1] = 550
             monster[2] = 5
-            monster[3] = 75
-            monster[4] = 175
+            monster[3] = 800
+            monster[4] = 2500
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -303,12 +303,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 81..95) {
-            moname = ""
-            monster[0] = 500
-            monster[1] = 75
+            moname = "예티"
+            monster[0] = 2500
+            monster[1] = 1200
             monster[2] = 5
-            monster[3] = 120
-            monster[4] = 300
+            monster[3] = 1500
+            monster[4] = 6000
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -317,12 +317,12 @@ class SnowHill: AppCompatActivity() {
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
         if(monran in 96..100) {
-            moname = ""
-            monster[0] = 750
-            monster[1] = 200
+            moname = "얼음 드래곤"
+            monster[0] = 4500
+            monster[1] = 1750
             monster[2] = 5
-            monster[3] = 250
-            monster[4] = 550
+            monster[3] = 2750
+            monster[4] = 10000
             info.append("체력: " + monster[0] + " ")
             info.append("공격력: " + monster[1] + " ")
             info.append("공격속도: " + monster[2] + "초 ")
@@ -330,7 +330,7 @@ class SnowHill: AppCompatActivity() {
             info.append("돈: " + monster[4] + " ")
             dialog.setMessage(moname + "을(를) 만났습니다. 싸우시겠습니까?\n" + info)
         }
-        dialog.setTitle("사냥 - 심해")
+        dialog.setTitle("사냥 - 눈의 언덕")
         dialog.setNegativeButton("다시 찾아보기") { dialog, which ->
             huntingCheck()
         }

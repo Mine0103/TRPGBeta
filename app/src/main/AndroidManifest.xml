@@ -35,6 +35,7 @@
         <activity android:name=".hunting.forest" android:screenOrientation="portrait" />
         <activity android:name=".hunting.deepsea" android:screenOrientation="portrait" />
         <activity android:name=".hunting.volcano" android:screenOrientation="portrait" />
+        <activity android:name=".hunting.SnowHill" android:screenOrientation="portrait" />
         <activity android:name=".hunting.raid" android:screenOrientation="portrait"/>
         <activity android:name=".village.village" android:screenOrientation="portrait"/>
         <activity android:name=".village.shop" android:screenOrientation="portrait" />

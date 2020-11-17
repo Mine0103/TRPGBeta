@@ -61,6 +61,88 @@ class variable: Application() {
     }
     //10 50 100 500 1000 2000 5000
     var portionCount: Array<Int> = arrayOf(0, 0, 0, 0, 0, 0, 0)
+    //렙제 공격력 방어력 크확 체력증가 체력흡수
+    var equipmentName = arrayOf(
+        "나뭇가지\n레벨제한:1 공격력:2 방어력:1\n크리티컬확률:1 체력증가:1 체력흡수:1",
+        "가죽투구\n레벨제한:1 공격력:0 방어력:5\n크리티컬확률:0 체력증가:10 체력흡수:0",
+        "가죽갑옷\n레벨제한:1 공격력:0 방어력:5\n크리티컬확률:0 체력증가:10 체력흡수:0",
+        "가죽바지\n레벨제한:1 공격력:0 방어력:5\n크리티컬확률:0 체력증가:10 체력흡수:0",
+        "가죽신발\n레벨제한:1 공격력:0 방어력:5\n크리티컬확률:0 체력증가:10 체력흡수:0"
+    )
+    var equipmentStat = arrayOf(
+        intArrayOf(0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0)
+    )
+    fun setEquipmentStat() {
+        setWeaponStat()
+        setArmorStat1()
+        setArmorStat2()
+        setArmorStat3()
+        setArmorStat4()
+    }
+    private fun setWeaponStat() {
+        val data1 = equipmentName[0].split("\n")
+        val data2 = data1[1].split(" ")
+        val level = data2[0].split("레벨제한:")[1].toInt()
+        val att = data2[1].split("공격력:")[1].toInt()
+        val def = data2[2].split("방어력:")[1].toDouble()
+        val data3 = data1[2].split(" ")
+        val critp = data3[0].split("크리티컬확률:")[1].toDouble()
+        val plusHp = data3[1].split("체력증가:")[1].toInt()
+        val addHp = data3[2].split("체력흡수:")[1].toInt()
+        if(stat1[0]>=level) equipmentStat[0] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
+    }
+    private fun setArmorStat1() {
+        val data1 = equipmentName[1].split("\n")
+        val data2 = data1[1].split(" ")
+        val level = data2[0].split("레벨제한:")[1].toInt()
+        val att = data2[1].split("공격력:")[1].toInt()
+        val def = data2[2].split("방어력:")[1].toDouble()
+        val data3 = data1[2].split(" ")
+        val critp = data3[0].split("크리티컬확률:")[1].toDouble()
+        val plusHp = data3[1].split("체력증가:")[1].toInt()
+        val addHp = data3[2].split("체력흡수:")[1].toInt()
+        if(stat1[0]>=level) equipmentStat[1] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
+    }
+    private fun setArmorStat2() {
+        val data1 = equipmentName[2].split("\n")
+        val data2 = data1[1].split(" ")
+        val level = data2[0].split("레벨제한:")[1].toInt()
+        val att = data2[1].split("공격력:")[1].toInt()
+        val def = data2[2].split("방어력:")[1].toDouble()
+        val data3 = data1[2].split(" ")
+        val critp = data3[0].split("크리티컬확률:")[1].toDouble()
+        val plusHp = data3[1].split("체력증가:")[1].toInt()
+        val addHp = data3[2].split("체력흡수:")[1].toInt()
+        if(stat1[0]>=level) equipmentStat[2] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
+    }
+    private fun setArmorStat3() {
+        val data1 = equipmentName[3].split("\n")
+        val data2 = data1[1].split(" ")
+        val level = data2[0].split("레벨제한:")[1].toInt()
+        val att = data2[1].split("공격력:")[1].toInt()
+        val def = data2[2].split("방어력:")[1].toDouble()
+        val data3 = data1[2].split(" ")
+        val critp = data3[0].split("크리티컬확률:")[1].toDouble()
+        val plusHp = data3[1].split("체력증가:")[1].toInt()
+        val addHp = data3[2].split("체력흡수:")[1].toInt()
+        if(stat1[0]>=level) equipmentStat[3] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
+    }
+    private fun setArmorStat4() {
+        val data1 = equipmentName[4].split("\n")
+        val data2 = data1[1].split(" ")
+        val level = data2[0].split("레벨제한:")[1].toInt()
+        val att = data2[1].split("공격력:")[1].toInt()
+        val def = data2[2].split("방어력:")[1].toDouble()
+        val data3 = data1[2].split(" ")
+        val critp = data3[0].split("크리티컬확률:")[1].toDouble()
+        val plusHp = data3[1].split("체력증가:")[1].toInt()
+        val addHp = data3[2].split("체력흡수:")[1].toInt()
+        if(stat1[0]>=level) equipmentStat[4] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
+    }
 
     fun resetVar() {
         plusStat = false

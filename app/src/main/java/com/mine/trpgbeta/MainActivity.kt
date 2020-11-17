@@ -19,7 +19,6 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -32,11 +31,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.reward.RewardItem
-import com.google.android.gms.ads.reward.RewardedVideoAd
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdCallback
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.mine.trpgbeta.hunting.*
 import com.mine.trpgbeta.village.village
 import java.io.*
@@ -168,31 +162,25 @@ class MainActivity : AppCompatActivity() {
         meun.width = windowManager.defaultDisplay.width/2
         lay2.addView(meun)
         val loginBut = addButton("로그인") {
-            val intent = Intent(applicationContext, login::class.java)
-            startActivity(intent)
+            //val intent = Intent(applicationContext, login::class.java)
+            //startActivity(intent)
         }
         val adtest = addButton("광고 테스트") {
 
         }
+        val debugging = addButton("디버그") {
+            debugging()
+        }
+        layout.addView(debugging)
 
         layout.addView(lay1)
         layout.addView(lay2)
 
-        val info = addTextView(
-            "\n\nby.mine V1.0.0.13\nCopyright (c) 2020. mine. All rights reserved. ",
-            15,
-            Color.WHITE,
-            Gravity.CENTER
-        )
+        val info = addTextView("\n\nby.mine V1.0.0.15\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
         layout.addView(info)
 
         val bnl = BottomNavigationLayout(this)
-        bnl.addBottomButton(
-            "포션",
-            android.R.drawable.ic_menu_search,
-            getRippleDrawable(),
-            Color.WHITE
-        ) {
+        bnl.addBottomButton("포션", android.R.drawable.ic_menu_search, getRippleDrawable(), Color.WHITE) {
             showPortionInventory()
         }
         bnl.setBackgroundColor(Color.TRANSPARENT)
@@ -244,6 +232,11 @@ class MainActivity : AppCompatActivity() {
 
         }*/
 
+        val air = TextView(this)
+        air.text = "............"
+        air.width = LinearLayout.LayoutParams.MATCH_PARENT
+        air.height = dip2px(50)
+        drawer!!.addView(air)
         //drawer!!.addView(adLayout)
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -262,6 +255,20 @@ class MainActivity : AppCompatActivity() {
             readPortion(preferences, var1)
         }
 
+    }
+    private fun debugging() {
+        val var1 = application as variable
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        val but1 = addButton("장비스텟확인") {
+            showDialog("장비 스텟", var1.equipmentStat[0][1]    .toString())
+        }
+        layout.addView(but1)
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("디버그")
+            .setNegativeButton("닫기", null)
+            .show()
     }
     private fun readStat(preferences: SharedPreferences, var1: variable) {
         var1.stat1[0] = preferences.getInt("stat1[0]", 1)
@@ -313,14 +320,14 @@ class MainActivity : AppCompatActivity() {
         exitCheck()
     }
     private fun exitCheck() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("게임 종료")
-        dialog.setMessage("TRPG를 종료하시겠습니까?")
-        dialog.setNegativeButton("취소", null)
-        dialog.setPositiveButton("종료") { dialog, which ->
-            finish()
-        }
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle("게임 종료")
+            .setMessage("")
+            .setNegativeButton("취소", null)
+            .setPositiveButton("종료") { dialog, which ->
+                finish()
+            }
+            .show()
     }
     override fun onStop() {
         val `var` = application as variable
@@ -464,11 +471,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun showDialog(title: String, msg: String) {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle(title)
-        dialog.setMessage(msg)
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(msg)
+            .setNegativeButton("닫기", null)
+            .show()
     }
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun getRippleDrawable(): RippleDrawable? {
@@ -500,7 +507,7 @@ class MainActivity : AppCompatActivity() {
         } catch (e: IOException) {
             toast(e.toString(), true)
         }
-        return "";
+        return ""
     }
 
     private fun timer1() {
@@ -516,6 +523,7 @@ class MainActivity : AppCompatActivity() {
                 setPassive1()
                 setPassive2()
                 setHiddenPassive()
+                var1.setEquipmentStat()
             }
         }
         val tt2: TimerTask = object : TimerTask() {
@@ -541,11 +549,17 @@ class MainActivity : AppCompatActivity() {
     }
     private fun setStat() {
         val var1 = application as variable
-        var1.stat3[4] = 2+(2*var1.stat2[1])
+        val eq = var1.equipmentStat
+        val att = eq[0][1]+eq[1][1]+eq[2][1]+eq[3][1]+eq[4][1]
+        val def = eq[0][2]+eq[1][2]+eq[2][2]+eq[3][2]+eq[4][2]*0.1
+        val critp = eq[0][3]+eq[1][3]+eq[2][3]+eq[3][3]+eq[4][3]*0.1
+        val plusHp = eq[0][4]+eq[1][4]+eq[2][4]+eq[3][4]+eq[4][4]
+        val addHp = eq[0][5]+eq[1][5]+eq[2][5]+eq[3][5]+eq[4][5]
+        var1.stat3[4] = 2+(2*var1.stat2[1])+att
         var1.stat4[0] = 5.0-(var1.stat2[2]*0.001)
-        var1.stat3[1] = 10+(5*var1.stat2[3])
-        var1.stat4[1] = 0.1*var1.stat2[4]
-        var1.stat4[2] = 0.1*var1.stat2[5]
+        var1.stat3[1] = 10+(5*var1.stat2[3])+plusHp
+        var1.stat4[1] = 0.1*var1.stat2[4]+critp
+        var1.stat4[2] = 0.1*var1.stat2[5]+def
         var1.stat3[3] = 10+var1.stat2[6]
         var1.stat5[1] = (1+ floor(var1.stat2[7].toDouble())).toInt()
     }
@@ -696,7 +710,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMeun() {
-        val dialog = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val list = ListView(this)
@@ -716,22 +729,22 @@ class MainActivity : AppCompatActivity() {
         }
         layout.addView(list)
 
-        dialog.setView(layout)
-        dialog.setTitle("메뉴")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("메뉴")
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     @SuppressLint("SetTextI18n")
     private fun stat1() {
         val var1 = application as variable
-        val dialog = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
 
         val txt1 = addTextView("스탯: " + var1.stat2[0], 20, Color.BLACK, Gravity.CENTER)
         layout.addView(txt1)
-        val meuns: Array<String> = arrayOf(
+        var meuns: Array<String> = arrayOf(
             "힘: " + var1.stat2[1],
             "민첩: " + var1.stat2[2],
             "체력: " + var1.stat2[3],
@@ -745,6 +758,14 @@ class MainActivity : AppCompatActivity() {
                 var1.stat2[1]+=1
                 but1.text = meuns[0]
                 txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                "힘: " + var1.stat2[1],
+                "민첩: " + var1.stat2[2],
+                "체력: " + var1.stat2[3],
+                "운: " + var1.stat2[4],
+                "방어: " + var1.stat2[5]
+                )
+                but1.text = meuns[0]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
             }
@@ -757,6 +778,14 @@ class MainActivity : AppCompatActivity() {
                 var1.stat2[2]+=1
                 but2.text = meuns[1]
                 txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5]
+                )
+                but2.text = meuns[1]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
             }
@@ -769,6 +798,14 @@ class MainActivity : AppCompatActivity() {
                 var1.stat2[3]+=1
                 but3.text = meuns[2]
                 txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5]
+                )
+                but3.text = meuns[2]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
             }
@@ -781,6 +818,14 @@ class MainActivity : AppCompatActivity() {
                 var1.stat2[4]+=1
                 but4.text = meuns[3]
                 txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5]
+                )
+                but4.text = meuns[3]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
             }
@@ -793,19 +838,27 @@ class MainActivity : AppCompatActivity() {
                 var1.stat2[5]+=1
                 but5.text = meuns[4]
                 txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5]
+                )
+                but5.text = meuns[4]
             } else {
                 showDialog("스탯부족", "스텟이 부족합니다.")
             }
         }
         layout.addView(but5)
 
-        dialog.setView(layout)
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun hunting() {
-        val dialog = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val but1 = addButton("들판") {
@@ -839,15 +892,14 @@ class MainActivity : AppCompatActivity() {
         }
         layout.addView(raid)
 
-        dialog.setView(layout)
-        dialog.setTitle("사냥")
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("사냥")
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun showPassive() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("패시브확인")
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val meun = arrayOf("힘", "민첩", "체력", "운", "방어", "히든 패시브")
@@ -876,9 +928,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         layout.addView(listView)
-        builder.setView(layout)
-        builder.setNegativeButton("닫기", null)
-        builder.show()
+        AlertDialog.Builder(this)
+            .setTitle("패시브 확인")
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .show()
     }
     private fun showStPassive() {
         val `var` = application as variable
@@ -957,26 +1011,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showInventoryList() {
-        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        builder.setView(layout)
-        val but1 = Button(this)
-        but1.text = "인벤토리"
-        but1.setOnClickListener { showInventory() }
+        val but1 = addButton("인벤토리") {
+            showInventory()
+        }
         layout.addView(but1)
-        val but2 = Button(this)
-        but2.text = "포션 인벤토리"
-        but2.setOnClickListener { showPortionInventory() }
+        val but2 = addButton("포션 인벤토리") {
+            showPortionInventory()
+        }
         layout.addView(but2)
-        builder.setTitle("인벤토리 리스트")
-        builder.setNegativeButton("닫기", null)
-        builder.show()
+        val but3 = addButton("장비칸") {
+            equipmentInventory()
+        }
+        layout.addView(but3)
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("인벤토리 리스트")
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun showInventory() {
         val `var` = application as variable
-        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val listView = ListView(this)
@@ -1068,15 +1125,15 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         layout.addView(listView)
-        builder.setView(layout)
-        builder.setTitle("인벤토리")
-        builder.setNegativeButton("닫기", null)
-        builder.show()
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("인벤토리")
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun showPortionInventory() {
         val `var` = application as variable
-        val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val portionName = arrayOfNulls<String>(7)
@@ -1100,44 +1157,54 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         layout.addView(listView)
-        builder.setView(layout)
-        builder.setTitle("포션 인벤토리")
-        builder.setNegativeButton("닫기", null)
-        builder.show()
+        AlertDialog.Builder(this)
+            .setView(layout)
+            .setTitle("포션 인벤토리")
+            .setNegativeButton("닫기", null)
+            .show()
     }
-
     private fun cheakUsePortion(name: String, count: Int, pos: Int) {
         val `var` = application as variable
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("포션 사용 확인")
-        builder.setMessage(
-            """
-            ${name}을 사용하시겠습니까?
-            남은 갯수: $count
-            """.trimIndent()
-        )
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton(
-            "사용"
-        ) { dialog, which ->
-            val heal: Int = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
-            if (`var`.stat3[0] + heal <= `var`.stat3[1]) {
-                `var`.stat3[0] += (heal)
-                `var`.portionCount[pos] -= 1
+        AlertDialog.Builder(this)
+            .setTitle("포션 사용 확인")
+            .setMessage("""${name}을 사용하시겠습니까?남은 갯수: $count""".trimIndent())
+            .setNegativeButton("취소", null)
+            .setPositiveButton("사용") { dialog, which ->
+                val heal: Int = name.split("회복포션".toRegex()).toTypedArray()[0].toInt()
+                if (`var`.stat3[0] + heal <= `var`.stat3[1]) {
+                    `var`.stat3[0] += (heal)
+                    `var`.portionCount[pos] -= 1
+                }
+                if (`var`.stat3[0] + heal > `var`.stat3[1]) {
+                    `var`.stat3[0] = (`var`.stat3[1])
+                    `var`.portionCount[pos] -= 1
+                }
+                if (`var`.stat3[0] == `var`.stat3[1]) {
+                    toast("이미 최대 체력입니다.", false)
+                }
             }
-            if (`var`.stat3[0] + heal > `var`.stat3[1]) {
-                `var`.stat3[0] = (`var`.stat3[1])
-                `var`.portionCount[pos] -= 1
-            }
-            if (`var`.stat3[0] == `var`.stat3[1]) {
-                toast("이미 최대 체력입니다.", false)
-            }
+            .show()
+    }
+
+    private fun equipmentInventory() {
+        val var1 = application as variable
+        val layout = LinearLayout(this)
+        val list = ListView(this)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, var1.equipmentName)
+        list.adapter = adapter
+        list.onItemClickListener = AdapterView.OnItemClickListener() { parent, view, position, id ->  
+            
         }
-        builder.show()
+        layout.addView(list)
+        layout.orientation = LinearLayout.VERTICAL
+        AlertDialog.Builder(this)
+            .setTitle("인번토리 - 장비")
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun otherFun() {
-        val dialog = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val but1 = addButton("저장") {
@@ -1153,46 +1220,47 @@ class MainActivity : AppCompatActivity() {
         }
         layout.addView(but3)
 
-        dialog.setTitle("기타 기능")
-        dialog.setView(layout)
-        dialog.setNegativeButton("닫기", null)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle("기타 기능")
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .show()
     }
 
     private fun saveCheck() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("저장")
-        dialog.setMessage("게임 정보를 내부저장소에 저장하시겠습니까?")
-        dialog.setNegativeButton("닫기", null)
-        dialog.setPositiveButton("저장") { dialog, which ->
-            showDialog("알림", "아직 지원하지않는 기능입니다.")
-        }
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle("저장")
+            .setMessage("게임 정보를 내부저장소에 저장하시겠습니까?")
+            .setNegativeButton("닫기", null)
+            .setPositiveButton("저장") { dialog, which ->
+                showDialog("알림", "아직 지원하지않는 기능입니다.")
+            }
+            .show()
     }
     private fun loadCheck() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("저장")
-        dialog.setMessage("게임 정보를 내부저장소에서 불러오시겠습니까?")
-        dialog.setNegativeButton("닫기", null)
-        dialog.setPositiveButton("불러오기") { dialog, which ->
-            showDialog("알림", "아직 지원하지않는 기능입니다.")
-        }
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle("저장")
+            .setMessage("게임 정보를 내부저장소에서 불러오시겠습니까?")
+            .setNegativeButton("닫기", null)
+            .setPositiveButton("불러오기") { dialog, which ->
+                showDialog("알림", "아직 지원하지않는 기능입니다.")
+            }
+            .show()
     }
     private fun reset() {
         val var1 = application as variable
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("확인")
-        dialog.setMessage("정말로 초기화 하시겠습니까?\n모든 정보가 초기화되며 복구가 불가능합니다.\n초기화 진행시 앱이 재시작 됩니다.")
-        dialog.setNegativeButton("취소", null)
-        dialog.setPositiveButton("초기화") { dialog, which ->
-            var1.resetVar();
-            toast("초기화 되어습니다.", true)
-            finishAffinity()
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            exitProcess(0)
-        }
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle("확인")
+            .setMessage("정말로 초기화 하시겠습니까?\n모든 정보가 초기화되며 복구가 불가능합니다.\n초기화 진행시 앱이 재시작 됩니다.")
+            .setNegativeButton("취소", null)
+            .setPositiveButton("초기화") { dialog, which ->
+                var1.resetVar()
+                toast("초기화 되어습니다.", true)
+                finishAffinity()
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                exitProcess(0)
+            }
+            .show()
     }
 }
