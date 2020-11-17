@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         val debugging = addButton("디버그") {
             debugging()
         }
-        layout.addView(debugging)
+        //layout.addView(debugging)
 
         layout.addView(lay1)
         layout.addView(lay2)
@@ -256,12 +256,13 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     private fun debugging() {
         val var1 = application as variable
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val but1 = addButton("장비스텟확인") {
-            showDialog("장비 스텟", var1.equipmentStat[0][1]    .toString())
+            showDialog("장비 스텟", var1.equipmentStat[0][1].toString())
         }
         layout.addView(but1)
         AlertDialog.Builder(this)
@@ -270,6 +271,7 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("닫기", null)
             .show()
     }
+
     private fun readStat(preferences: SharedPreferences, var1: variable) {
         var1.stat1[0] = preferences.getInt("stat1[0]", 1)
         var1.stat1[1] = preferences.getInt("stat1[1]", 0)
@@ -294,13 +296,11 @@ class MainActivity : AppCompatActivity() {
         var1.stat4[1] = preferences.getFloat("stat4[1]", 0.0f).toDouble()
         var1.stat4[2] = preferences.getFloat("stat4[2]", 0.0f).toDouble()
     }
-
     private fun readVariable(preferences: SharedPreferences, var1: variable) {
         var1.plusStat = preferences.getBoolean("plusStat", false)
         var1.money = preferences.getInt("money", 500)
         var1.insize = preferences.getInt("inSize", 0)
     }
-
     private fun readInventory(preferences: SharedPreferences, var1: variable) {
         for (n in 0 until var1.insize) {
             val s1 = "im$n"
@@ -309,7 +309,6 @@ class MainActivity : AppCompatActivity() {
             var1.itemcount[n] = preferences.getInt(s2, 0)
         }
     }
-
     private fun readPortion(preferences: SharedPreferences, var1: variable) {
         for (n in 0..6) {
             var1.portionCount[n] = preferences.getInt("p$n", 0)
@@ -366,13 +365,11 @@ class MainActivity : AppCompatActivity() {
         editor.putFloat("stat4[1]", var1.stat4[1].toFloat())
         editor.putFloat("stat4[2]", var1.stat4[2].toFloat())
     }
-
     private fun saveVariable(editor: SharedPreferences.Editor, var1: variable) {
         editor.putBoolean("plusStat", var1.plusStat)
         editor.putInt("money", var1.money)
         editor.putInt("inSize", var1.insize)
     }
-
     private fun saveInventory(editor: SharedPreferences.Editor, var1: variable) {
         for (n in 0 until var1.insize) {
             val s1 = "im$n"
@@ -381,7 +378,6 @@ class MainActivity : AppCompatActivity() {
             var1.itemcount[n]?.let { editor.putInt(s2, it) }
         }
     }
-
     private fun savePortion(editor: SharedPreferences.Editor, var1: variable) {
         for (n in 0..6) {
             editor.putInt("p$n", var1.portionCount[n])
@@ -555,7 +551,7 @@ class MainActivity : AppCompatActivity() {
         val critp = eq[0][3]+eq[1][3]+eq[2][3]+eq[3][3]+eq[4][3]*0.1
         val plusHp = eq[0][4]+eq[1][4]+eq[2][4]+eq[3][4]+eq[4][4]
         val addHp = eq[0][5]+eq[1][5]+eq[2][5]+eq[3][5]+eq[4][5]
-        var1.stat3[4] = 2+(2*var1.stat2[1])+att
+        var1.stat3[4] = (2*var1.stat2[1])+att
         var1.stat4[0] = 5.0-(var1.stat2[2]*0.001)
         var1.stat3[1] = 10+(5*var1.stat2[3])+plusHp
         var1.stat4[1] = 0.1*var1.stat2[4]+critp
