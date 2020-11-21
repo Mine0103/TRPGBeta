@@ -34,6 +34,7 @@ import com.google.android.gms.ads.*
 import com.mine.trpgbeta.hunting.*
 import com.mine.trpgbeta.village.village
 import java.io.*
+import java.net.URL
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -85,6 +86,9 @@ class MainActivity : AppCompatActivity() {
     )
     private var am: AssetManager? = null
     private var mAdView: AdView? = null
+    val funs = functions(this)
+    private val verName = arrayOf("1.0.0.15", "")
+    private val verCode = arrayOf(15, 0)
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         txt1 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
         layout.addView(txt1)
         txt2 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
+        layout.addView(txt2)
         txt3 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
         layout.addView(txt3)
         txt4 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
@@ -176,7 +181,7 @@ class MainActivity : AppCompatActivity() {
         layout.addView(lay1)
         layout.addView(lay2)
 
-        val info = addTextView("\n\nby.mine V1.0.0.15\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
+        val info = addTextView("\n\nby.mine V1.0.0.16\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
         layout.addView(info)
 
         val bnl = BottomNavigationLayout(this)
@@ -236,7 +241,7 @@ class MainActivity : AppCompatActivity() {
         air.text = "............"
         air.width = LinearLayout.LayoutParams.MATCH_PARENT
         air.height = dip2px(50)
-        drawer!!.addView(air)
+        //drawer!!.addView(air)
         //drawer!!.addView(adLayout)
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -245,6 +250,7 @@ class MainActivity : AppCompatActivity() {
         am = resources.assets
 
         timer1()
+        onBlock()
 
         val var1 = application as variable
         val preferences = getSharedPreferences("variable", MODE_PRIVATE)
@@ -505,6 +511,50 @@ class MainActivity : AppCompatActivity() {
         }
         return ""
     }
+    private fun onBlock() {
+        var cache = ""
+        Thread {
+            run {
+                cache = getDataFormServer().toString()
+            }
+        }
+        val data = cache.split("::")
+        verName[1] = data[0]
+        toast(cache, false)
+        /*verCode[1] = data[1].toInt()
+        if(verCode[0]<verCode[1]) {
+            AlertDialog.Builder(this)
+                .setTitle("업데이트 알림")
+                .setMessage("${data[2]}\n현재버전: ${verName[0]} 최신버전: ${verName[1]}")
+                .setNegativeButton("닫기", null)
+                .show()
+        }*/
+    }
+    private fun getDataFormServer(): String? {
+        try {
+            val url = URL("https://github.com/Mine0103/TRPGBeta_isBlocked/blob/master/isBlocked.txt")
+            val con = url.openConnection()
+            var str = ""
+            if(con!=null) {
+                con.connectTimeout = 5000
+                con.useCaches = false
+                val isr = InputStreamReader(con.getInputStream())
+                val br = BufferedReader(isr)
+                str = br.readLine()
+                var line = ""
+                while (true) {
+                    line = br.readLine()
+                    str+="\n${line}"
+                }
+            }
+            return str
+        } catch(e: java.lang.Exception) {
+            showDialog("error", e.toString())
+            return null
+        } finally {
+
+        }
+    }
 
     private fun timer1() {
         val var1 = application as variable
@@ -520,6 +570,7 @@ class MainActivity : AppCompatActivity() {
                 setPassive2()
                 setHiddenPassive()
                 var1.setEquipmentStat()
+                if(var1.time==24) var1.time = 0
             }
         }
         val tt2: TimerTask = object : TimerTask() {
@@ -527,20 +578,25 @@ class MainActivity : AppCompatActivity() {
                 healing()
             }
         }
+        val tt3: TimerTask = object : TimerTask() {
+            override fun run() {
+                var1.time+=1
+            }
+        }
         val timer = Timer()
         timer.schedule(tt1, 100, 100)
         timer.schedule(tt2, 5000, 5000)
+        timer.schedule(tt3, 12500, 12500)
     }
     @SuppressLint("SetTextI18n")
     private fun setText() {
         val var1 = application as variable
         runOnUiThread {
-            txt1?.text = "체력: ["+var1.stat3[0]+"/"+var1.stat3[1]+"] 레벨: "+var1.stat1[0]+" 경험치: ["+var1.stat1[1]+"/"+var1.stat1[2]+"]"
-            txt2?.text = "체력: ["+var1.stat3[0]+"/"+var1.stat3[1]+"] "+" 마나: ["+var1.stat3[2]+"/"+var1.stat3[3]+"]"
-            txt3?.text = "스탯: "+var1.stat2[0]+" 힘: "+var1.stat2[1]+" 민첩: "+var1.stat2[2]+" 체력 "+var1.stat2[3]+" 운: "+var1.stat2[4]+" 방어: "+var1.stat2[5]+""
-            var st1 = "지능: "+var1.stat2[6]+" 지혜: "+var1.stat2[7]
-            txt4?.text = "공격력: "+var1.stat3[4]+" 공격속도: "+var1.stat4[0]+" 치명타확률: "+var1.stat4[1]+"%\n방어력: "+var1.stat4[2]+""//+"마나회복량: "+var1.stat4[3]
-            txt5?.text = "돈: "+var1.money
+            txt1?.text = "레벨: ${var1.stat1[0]} 경험치: [${var1.stat1[1]}/${var1.stat1[2]}]"
+            txt2?.text = "체력: [${var1.stat3[0]}/${var1.stat3[1]}] 마나: [${var1.stat3[2]}/${var1.stat3[3]}]"
+            txt3?.text = "스탯: ${var1.stat2[0]} 힘: ${var1.stat2[1]} 민첩: ${var1.stat2[2]} 체력: ${var1.stat2[3]} 운: ${var1.stat2[4]} 방어: ${var1.stat2[5]}\n지능: ${var1.stat2[6]} 지혜: ${var1.stat2[7]}"
+            txt4?.text = "공격력: ${var1.stat3[4]} 공격속도: ${var1.stat4[0]} 치명타확률: ${var1.stat4[1]}%\n방어력: ${var1.stat4[2]} 마나회복량: ${var1.stat5[1]}"
+            txt5?.text = "돈: ${var1.money} 시간: ${var1.time}시"
         }
     }
     private fun setStat() {
@@ -556,8 +612,8 @@ class MainActivity : AppCompatActivity() {
         var1.stat3[1] = 10+(5*var1.stat2[3])+plusHp
         var1.stat4[1] = 0.1*var1.stat2[4]+critp
         var1.stat4[2] = 0.1*var1.stat2[5]+def
-        var1.stat3[3] = 10+var1.stat2[6]
-        var1.stat5[1] = (1+ floor(var1.stat2[7].toDouble())).toInt()
+        var1.stat3[3] = 10+(var1.stat2[6]*2)
+        var1.stat5[1] = (1+ floor(var1.stat2[7]*0.2)).toInt()
     }
     private fun levelUp() {
         val `var` = application as variable
@@ -745,21 +801,24 @@ class MainActivity : AppCompatActivity() {
             "민첩: " + var1.stat2[2],
             "체력: " + var1.stat2[3],
             "운: " + var1.stat2[4],
-            "방어: " + var1.stat2[5]
+            "방어: " + var1.stat2[5],
+            "지능: " + var1.stat2[6],
+            "지혜: " + var1.stat2[7]
         )
         val but1 = addButton(meuns[0], null)
         but1.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[1]+=1
-                but1.text = meuns[0]
                 txt1.text = "스탯: "+var1.stat2[0]
                 meuns = arrayOf(
                 "힘: " + var1.stat2[1],
                 "민첩: " + var1.stat2[2],
                 "체력: " + var1.stat2[3],
                 "운: " + var1.stat2[4],
-                "방어: " + var1.stat2[5]
+                "방어: " + var1.stat2[5],
+                "지능: " + var1.stat2[6],
+                "지혜: " + var1.stat2[7]
                 )
                 but1.text = meuns[0]
             } else {
@@ -772,14 +831,15 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[2]+=1
-                but2.text = meuns[1]
                 txt1.text = "스탯: "+var1.stat2[0]
                 meuns = arrayOf(
                     "힘: " + var1.stat2[1],
                     "민첩: " + var1.stat2[2],
                     "체력: " + var1.stat2[3],
                     "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5]
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
                 )
                 but2.text = meuns[1]
             } else {
@@ -792,14 +852,15 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[3]+=1
-                but3.text = meuns[2]
                 txt1.text = "스탯: "+var1.stat2[0]
                 meuns = arrayOf(
                     "힘: " + var1.stat2[1],
                     "민첩: " + var1.stat2[2],
                     "체력: " + var1.stat2[3],
                     "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5]
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
                 )
                 but3.text = meuns[2]
             } else {
@@ -812,14 +873,15 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[4]+=1
-                but4.text = meuns[3]
                 txt1.text = "스탯: "+var1.stat2[0]
                 meuns = arrayOf(
                     "힘: " + var1.stat2[1],
                     "민첩: " + var1.stat2[2],
                     "체력: " + var1.stat2[3],
                     "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5]
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
                 )
                 but4.text = meuns[3]
             } else {
@@ -832,14 +894,15 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[5]+=1
-                but5.text = meuns[4]
                 txt1.text = "스탯: "+var1.stat2[0]
                 meuns = arrayOf(
                     "힘: " + var1.stat2[1],
                     "민첩: " + var1.stat2[2],
                     "체력: " + var1.stat2[3],
                     "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5]
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
                 )
                 but5.text = meuns[4]
             } else {
@@ -847,6 +910,48 @@ class MainActivity : AppCompatActivity() {
             }
         }
         layout.addView(but5)
+        val but6 = addButton(meuns[5], null)
+        but6.setOnClickListener {
+            if(var1.stat2[0]>0) {
+                var1.stat2[0]-=1
+                var1.stat2[6]+=1
+                txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
+                )
+                but6.text = meuns[5]
+            } else {
+                showDialog("스탯부족", "스텟이 부족합니다.")
+            }
+        }
+        layout.addView(but6)
+        val but7 = addButton(meuns[6], null)
+        but7.setOnClickListener {
+            if(var1.stat2[0]>0) {
+                var1.stat2[0]-=1
+                var1.stat2[7]+=1
+                txt1.text = "스탯: "+var1.stat2[0]
+                meuns = arrayOf(
+                    "힘: " + var1.stat2[1],
+                    "민첩: " + var1.stat2[2],
+                    "체력: " + var1.stat2[3],
+                    "운: " + var1.stat2[4],
+                    "방어: " + var1.stat2[5],
+                    "지능: " + var1.stat2[6],
+                    "지혜: " + var1.stat2[7]
+                )
+                but7.text = meuns[6]
+            } else {
+                showDialog("스탯부족", "스텟이 부족합니다.")
+            }
+        }
+        layout.addView(but7)
 
         AlertDialog.Builder(this)
             .setView(layout)
@@ -1027,7 +1132,6 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("닫기", null)
             .show()
     }
-
     private fun showInventory() {
         val `var` = application as variable
         val layout = LinearLayout(this)
@@ -1044,9 +1148,9 @@ class MainActivity : AppCompatActivity() {
                 val item = parent.getItemAtPosition(position).toString()
                 val itemname = item.split(" - ".toRegex()).toTypedArray()[0]
                 val itemcount: Int = item.split(" - ".toRegex()).toTypedArray()[1].toInt()
+                val n1 = itemcount - 1
                 if (itemname.contains("회복포션")) {
                     val data1: Int = itemname.split("회복포션".toRegex()).toTypedArray()[0].toInt()
-                    val n1 = itemcount - 1
                     if (data1 == 10) {
                         if (itemcount > 0) {
                             `var`.itemcount[position] = n1
@@ -1054,7 +1158,7 @@ class MainActivity : AppCompatActivity() {
                             toast("10회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 50) {
@@ -1064,7 +1168,7 @@ class MainActivity : AppCompatActivity() {
                             toast("50회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 100) {
@@ -1074,7 +1178,7 @@ class MainActivity : AppCompatActivity() {
                             toast("100회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 500) {
@@ -1084,7 +1188,7 @@ class MainActivity : AppCompatActivity() {
                             toast("500회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 1000) {
@@ -1094,7 +1198,7 @@ class MainActivity : AppCompatActivity() {
                             toast("1000회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 2000) {
@@ -1104,7 +1208,7 @@ class MainActivity : AppCompatActivity() {
                             toast("2000회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
                     }
                     if (data1 == 5000) {
@@ -1114,8 +1218,20 @@ class MainActivity : AppCompatActivity() {
                             toast("5000회복포션 1개를 가방에 넣었습니다", false)
                         }
                         if (itemcount == 0) {
-                            showDialog("아이텝 부족", itemname + "의 갯수가 부족합니다.")
+                            showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                         }
+                    }
+                }
+                if(item.contains("검")) {
+                    val data = parent.getItemAtPosition(position).toString().split("\n")
+                    val name = "${data[0]}\n${data[1]}\n${data[2]}"
+                    if (itemcount > 0) {
+                        `var`.itemcount[position] = n1
+                        `var`.equipmentName[0] = name
+                        toast(name+"을(를) 장비했습니다", false)
+                    }
+                    if (itemcount == 0) {
+                        showDialog("아이템 부족", itemname + "의 갯수가 부족합니다.")
                     }
                 }
                 adapter.notifyDataSetChanged()
@@ -1127,7 +1243,6 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("닫기", null)
             .show()
     }
-
     private fun showPortionInventory() {
         val `var` = application as variable
         val layout = LinearLayout(this)
@@ -1181,15 +1296,36 @@ class MainActivity : AppCompatActivity() {
             }
             .show()
     }
-
     private fun equipmentInventory() {
         val var1 = application as variable
         val layout = LinearLayout(this)
         val list = ListView(this)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, var1.equipmentName)
         list.adapter = adapter
-        list.onItemClickListener = AdapterView.OnItemClickListener() { parent, view, position, id ->  
-            
+        list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            val `var` = application as variable
+            var inSize = `var`.insize
+            val name = var1.equipmentName[position]+"\n무기종류:검"
+            if(!parent.getItemAtPosition(position).toString().contains("empty")) {
+                if(inSize==0) {
+                    `var`.addInsize()
+                    `var`.itemname[0] = name
+                    `var`.itemcount[0] = 1
+                } else {
+                    for(i in 0 until inSize) {
+                        if(`var`.itemname[i] == name) {
+                            `var`.itemcount[i] = `var`.itemcount[i]?.plus(1)
+                        } else {
+                            `var`.addInsize()
+                            inSize = `var`.insize - 1
+                            `var`.itemname[inSize] = name
+                            `var`.itemcount[inSize] = 1
+                        }
+                    }
+                }
+            }
+            var1.equipmentName[position] = "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0"
+            adapter.notifyDataSetChanged()
         }
         layout.addView(list)
         layout.orientation = LinearLayout.VERTICAL

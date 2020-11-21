@@ -1,14 +1,16 @@
 /*
- * Create by mine on 2020. 11. 13.
+ * Create by mine on 2020. 11. 19.
  * Copyright (c) 2020. mine. All rights reserved.
  *
  */
 
-package com.mine.trpgbeta.village
+package com.mine.trpgbeta
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -18,22 +20,16 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.mine.trpgbeta.R
-import com.mine.trpgbeta.variable
-import java.util.*
 import kotlin.math.ceil
 
-class village: AppCompatActivity() {
+class baseActivity: AppCompatActivity() {
     private var drawer: DrawerLayout? = null
-    private var txt1: TextView? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val var1 = application as variable
         val layout0 = LinearLayout(this)
         layout0.orientation = LinearLayout.VERTICAL
         val layout = LinearLayout(this)
@@ -43,47 +39,31 @@ class village: AppCompatActivity() {
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setBackgroundColor(Color.TRANSPARENT)
         ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
         layout0.addView(toolbar)
 
-        txt1 = addTextView("마을", 25, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-        val but1 = addButton("상점") {
-            val intent = Intent(applicationContext, shop::class.java)
-            if(var1.time in 9..18) startActivity(intent)
-            else showDialog("알림", "상점은 9시부터 18시까지 엽니다.")
-        }
-        layout.addView(but1)
-        val but2 = addButton("도박장") {
-            val intent = Intent(applicationContext, casino::class.java)
-            if(var1.time in 9..23) startActivity(intent)
-            else showDialog("알림", "도박장은 9시부터 23시까지 엽니다.")
-        }
-        layout.addView(but2)
-
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
         drawer = DrawerLayout(this)
+        layout0.addView(layout)
         drawer!!.addView(layout0)
         val layout2 = createDrawerLayout()
         drawer!!.addView(layout2)
         drawer!!.setBackgroundResource(R.drawable.background)
-
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
+    }
 
-        val tt1: TimerTask = object : TimerTask() {
-            @SuppressLint("SetTextI18n")
-            override fun run() {
-                runOnUiThread {
-                    txt1?.text = "마을\n시간: ${var1.time}시"
-                }
+    override fun onBackPressed() {
+        exitCheck()
+    }
+    private fun exitCheck() {
+        AlertDialog.Builder(this)
+            .setTitle("게임 종료")
+            .setMessage("")
+            .setNegativeButton("취소", null)
+            .setPositiveButton("종료") { dialog, which ->
+                finish()
             }
-        }
-        Timer().schedule(tt1, 100, 100)
-
+            .show()
     }
 
     @SuppressLint("RtlHardcoded", "SetTextI18n")

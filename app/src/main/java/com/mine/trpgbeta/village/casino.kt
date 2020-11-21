@@ -1,5 +1,6 @@
+
 /*
- * Create by mine on 2020. 11. 13.
+ * Create by mine on 2020. 11. 19.
  * Copyright (c) 2020. mine. All rights reserved.
  *
  */
@@ -7,33 +8,32 @@
 package com.mine.trpgbeta.village
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.mine.trpgbeta.BottomNavigationLayout
 import com.mine.trpgbeta.R
 import com.mine.trpgbeta.variable
-import java.util.*
+import java.lang.StringBuilder
 import kotlin.math.ceil
+import kotlin.math.floor
 
-class village: AppCompatActivity() {
+class casino: AppCompatActivity() {
     private var drawer: DrawerLayout? = null
-    private var txt1: TextView? = null
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RtlHardcoded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val var1 = application as variable
         val layout0 = LinearLayout(this)
         layout0.orientation = LinearLayout.VERTICAL
         val layout = LinearLayout(this)
@@ -43,47 +43,45 @@ class village: AppCompatActivity() {
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setBackgroundColor(Color.TRANSPARENT)
         ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
         layout0.addView(toolbar)
 
-        txt1 = addTextView("마을", 25, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-        val but1 = addButton("상점") {
-            val intent = Intent(applicationContext, shop::class.java)
-            if(var1.time in 9..18) startActivity(intent)
-            else showDialog("알림", "상점은 9시부터 18시까지 엽니다.")
+        val but1 = addButton("슬롯머신") {
+            slotMachine()
         }
         layout.addView(but1)
-        val but2 = addButton("도박장") {
-            val intent = Intent(applicationContext, casino::class.java)
-            if(var1.time in 9..23) startActivity(intent)
-            else showDialog("알림", "도박장은 9시부터 23시까지 엽니다.")
-        }
-        layout.addView(but2)
 
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
+        val bnl = BottomNavigationLayout(this)
+        bnl.addBottomButton("확률확인", android.R.drawable.ic_menu_search, getRippleDrawable(), Color.WHITE) {
+
+        }
+        bnl.setBackgroundColor(Color.TRANSPARENT)
+        val bnlLayout = LinearLayout(this)
+        bnlLayout.addView(bnl)
+        //drawer!!.addView(bnlLayout)
+
         drawer = DrawerLayout(this)
+        layout0.addView(layout)
         drawer!!.addView(layout0)
         val layout2 = createDrawerLayout()
         drawer!!.addView(layout2)
         drawer!!.setBackgroundResource(R.drawable.background)
-
         setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
+    }
 
-        val tt1: TimerTask = object : TimerTask() {
-            @SuppressLint("SetTextI18n")
-            override fun run() {
-                runOnUiThread {
-                    txt1?.text = "마을\n시간: ${var1.time}시"
-                }
+    /*//override fun onBackPressed() {
+        //exitCheck()
+    //}*/
+    private fun exitCheck() {
+        AlertDialog.Builder(this)
+            .setTitle("게임 종료")
+            .setMessage("")
+            .setNegativeButton("취소", null)
+            .setPositiveButton("종료") { dialog, which ->
+                finish()
             }
-        }
-        Timer().schedule(tt1, 100, 100)
-
+            .show()
     }
 
     @SuppressLint("RtlHardcoded", "SetTextI18n")
@@ -173,6 +171,72 @@ class village: AppCompatActivity() {
             .setTitle(title)
             .setMessage(msg)
             .setNegativeButton("닫기", null)
+            .show()
+    }
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun getRippleDrawable(): RippleDrawable? {
+        return RippleDrawable(ColorStateList.valueOf(Color.LTGRAY), ColorDrawable(Color.GRAY), null)
+    }
+    @SuppressLint("SetTextI18n")
+    private fun slotMachine() {
+        val `var` = application as variable
+        val layout = LinearLayout(this)
+        val txt = addTextView("남은 횟수:${`var`.slotMachine}", 20, Color.BLACK, Gravity.CENTER)
+        layout.addView(txt)
+        AlertDialog.Builder(this)
+            .setTitle("슬롯머신")
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .setPositiveButton("돌리기") { dialog, which ->
+                val slot = `var`.slotMachine
+                if(slot>0) {
+                    `var`.slotMachine-=1
+                    val ran1 = floor(Math.random() * 100)+1
+                    if(ran1 in 1.0..40.0) {
+                        val ran2 = floor(Math.random() * 100)+1
+                        if(ran2 in 1.0..30.0) {
+                            `var`.stat2[0] += 1
+                            toast("스텟1이 나왔습니다.", false)
+                        }
+                        else if(ran2 in 31.0..45.0) {
+                            `var`.stat2[0] += 3
+                            toast("스텟3이 나왔습니다.", false)
+                        }
+                        else if(ran2 in 46.0..50.0) {
+                            `var`.stat2[0] += 5
+                            toast("스텟5이 나왔습니다.", false)
+                        }
+                        else if(ran2 in 51.0..80.0) {
+                            `var`.money += 1000
+                            toast("1000원이 나왔습니다.", false)
+                        }
+                        else if(ran2 in 81.0..95.0) {
+                            `var`.money += 10000
+                            toast("10000원이 나왔습니다.", false)
+                        }
+                        else if(ran2 in 96.0..100.0) {
+                            `var`.money += 100000
+                            toast("100000원이 나왔습니다.", false)
+                        }
+                    } else {
+                        toast("꽝", false)
+                    }
+                    txt.text = "남은 횟수:${`var`.slotMachine}"
+                } else {
+                    showDialog("알림", "남은횟수가 부족합니다.")
+                }
+            }
+            .setNeutralButton("확률확인") { dialog, which ->
+                val str = StringBuilder()
+                str.append("당첨될 확률:40%\n")
+                str.append("스텟1개:30%\n")
+                str.append("스텟3개:15%\n")
+                str.append("스텟5개:5%\n")
+                str.append("1000원:30%\n")
+                str.append("10000원:15%\n")
+                str.append("100000원:5%\n")
+                showDialog("확률표", str.toString())
+            }
             .show()
     }
 }

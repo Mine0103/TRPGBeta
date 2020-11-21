@@ -39,8 +39,7 @@
         <activity android:name=".hunting.raid" android:screenOrientation="portrait"/>
         <activity android:name=".village.village" android:screenOrientation="portrait"/>
         <activity android:name=".village.shop" android:screenOrientation="portrait" />
-
-        <activity android:name=".login" android:screenOrientation="portrait" />
+        <activity android:name=".village.casino" android:screenOrientation="portrait" />
         <meta-data android:name="android.arch.lifecycle.VERSION" android:value="27.0.0-SNAPSHOT"/>
     </application>
 </manifest>

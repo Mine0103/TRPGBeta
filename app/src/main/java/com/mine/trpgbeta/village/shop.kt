@@ -99,8 +99,14 @@ class shop : AppCompatActivity() {
         layout.orientation = LinearLayout.VERTICAL
         builder.setTitle("구매")
         builder.setNegativeButton("닫기", null)
-        val but1 = addButton("포션구매", View.OnClickListener { buyPortionDialog() })
+        val but1 = addButton("포션상점") {
+            buyPortionDialog()
+        }
         layout.addView(but1)
+        val but2 = addButton("잠화상점") {
+            buyOtherDialog()
+        }
+        layout.addView(but2)
         builder.setView(layout)
         builder.show()
     }
@@ -136,7 +142,6 @@ class shop : AppCompatActivity() {
         builder.setNegativeButton("닫기", null)
         builder.show()
     }
-
     private fun buyPortion(n1: Int) {
         val `var` = application as variable
         var inSize = `var`.insize
@@ -160,11 +165,35 @@ class shop : AppCompatActivity() {
         return
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun buyOtherDialog() {
+        val var1 = application as variable
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        val txt = addTextView("돈: ${var1.money}", 20, Color.BLACK, Gravity.CENTER)
+        layout.addView(txt)
+        val but1 = addButton("슬롯머신 횟수 구매 - 5000원") {
+            if(var1.money>=5000) {
+                var1.money-=5000
+                var1.slotMachine+=1
+                txt.text = "돈: ${var1.money}"
+            } else {
+                showDialog("알림", "돈이 부족합니다.")
+            }
+        }
+        layout.addView(but1)
+        AlertDialog.Builder(this)
+            .setTitle("잠화 상점")
+            .setView(layout)
+            .setNegativeButton("닫기", null)
+            .show()
+    }
+
     private fun showDialog(title: String?, msg: String?) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-        builder.setMessage(msg)
-        builder.setNegativeButton("닫기", null)
-        builder.show()
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(msg)
+            .setNegativeButton("닫기", null)
+            .show()
     }
 }

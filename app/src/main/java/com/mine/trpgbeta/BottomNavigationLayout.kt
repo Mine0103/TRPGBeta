@@ -88,14 +88,7 @@ class BottomNavigationLayout : FrameLayout {
         }
     }
 
-    private fun addBottomButton(
-        text: String?,
-        res: Int,
-        drawable: Drawable?,
-        listener: OnClickListener?,
-        size: Float,
-        color: Int
-    ) {
+    private fun addBottomButton(text: String?, res: Int, drawable: Drawable?, listener: OnClickListener?, size: Float, color: Int) {
         val layout = LinearLayout(ctx)
         layout.orientation = LinearLayout.VERTICAL
         layout.gravity = Gravity.CENTER

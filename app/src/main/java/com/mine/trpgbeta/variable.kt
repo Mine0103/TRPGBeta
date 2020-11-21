@@ -143,6 +143,8 @@ class variable: Application() {
         val addHp = data3[2].split("체력흡수:")[1].toInt()
         if(stat1[0]>=level) equipmentStat[4] = intArrayOf(level, att, (def).toInt(), (critp).toInt(), plusHp, addHp)
     }
+    var time = 9
+    var slotMachine = 5
 
     fun resetVar() {
         plusStat = false
@@ -169,5 +171,7 @@ class variable: Application() {
             "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0",
             "empty\n레벨제한:0 공격력:0 방어력:0\n크리티컬확률:0 체력증가:0 체력흡수:0"
         )
+        time = 0
+        slotMachine = 10000
     }
 }
