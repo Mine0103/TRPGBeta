@@ -145,6 +145,11 @@ class variable: Application() {
     }
     var time = 9
     var slotMachine = 5
+    var name: String = ""
+    @JvmName("getName1")
+    fun getName(): String {
+        return name
+    }
 
     fun resetVar() {
         plusStat = false

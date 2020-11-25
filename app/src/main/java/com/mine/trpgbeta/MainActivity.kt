@@ -19,6 +19,7 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.LimitExceededException
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -122,9 +123,10 @@ class MainActivity : AppCompatActivity() {
         layout.addView(txt5)
         val lay1 = LinearLayout(this)
         lay1.orientation = LinearLayout.HORIZONTAL
-        lay1.weightSum = 0.5f
         val lay2 = LinearLayout(this)
         lay2.orientation = LinearLayout.HORIZONTAL
+        val lay3 = LinearLayout(this)
+        lay3.orientation = LinearLayout.HORIZONTAL
         val scroll = ScrollView(this)
         scroll.addView(layout)
         layout0.addView(scroll)
@@ -166,6 +168,11 @@ class MainActivity : AppCompatActivity() {
         }
         meun.width = windowManager.defaultDisplay.width/2
         lay2.addView(meun)
+        val chatting = addButton("채팅") {
+            val intent = Intent(applicationContext, chatting::class.java)
+            startActivity(intent)
+        }
+        lay3.addView(chatting)
         val loginBut = addButton("로그인") {
             //val intent = Intent(applicationContext, login::class.java)
             //startActivity(intent)
@@ -180,8 +187,9 @@ class MainActivity : AppCompatActivity() {
 
         layout.addView(lay1)
         layout.addView(lay2)
+        layout.addView(lay3)
 
-        val info = addTextView("\n\nby.mine V1.0.0.16\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
+        val info = addTextView("\n\nby.mine V1.0.0.17\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
         layout.addView(info)
 
         val bnl = BottomNavigationLayout(this)
@@ -1351,6 +1359,10 @@ class MainActivity : AppCompatActivity() {
             reset()
         }
         layout.addView(but3)
+        val but4 = addButton("이름변경") {
+            changeName()
+        }
+        layout.addView(but4)
 
         AlertDialog.Builder(this)
             .setTitle("기타 기능")
@@ -1392,6 +1404,22 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
                 exitProcess(0)
+            }
+            .show()
+    }
+    private fun changeName() {
+        val var1 = application as variable
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        val loc1 = EditText(this)
+        loc1.hint = "이름"
+        loc1.setText(var1.getName())
+        layout.addView(loc1)
+        AlertDialog.Builder(this)
+            .setTitle("이름 변경")
+            .setNegativeButton("취소", null)
+            .setPositiveButton("변경") { dialog, which ->
+                var1.name = loc1.text.toString()
             }
             .show()
     }
