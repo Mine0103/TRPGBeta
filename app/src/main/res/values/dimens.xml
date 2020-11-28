@@ -1,0 +1,11 @@
+<!--
+  ~ Create by mine on 2020. 11. 27.
+  ~ Copyright (c) 2020. mine. All rights reserved.
+  ~
+  -->
+
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+</resources>

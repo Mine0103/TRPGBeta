@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Create by mine on 2020. 11. 27.
+  ~ Copyright (c) 2020. mine. All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20sp"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/but1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="힘"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="민첩"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="체력"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="운"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="방어"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="지능"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/but7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="지혜"
+        android:textSize="20sp"/>
+
+</LinearLayout>

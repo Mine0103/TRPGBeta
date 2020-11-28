@@ -145,7 +145,7 @@ class variable: Application() {
     }
     var time = 9
     var slotMachine = 5
-    var name: String = ""
+    var name = ""
     @JvmName("getName1")
     fun getName(): String {
         return name

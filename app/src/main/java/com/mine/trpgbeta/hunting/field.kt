@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mine.trpgbeta.BottomNavigationLayout
 import com.mine.trpgbeta.R
 import com.mine.trpgbeta.variable
@@ -43,121 +44,20 @@ class field : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val layout0 = LinearLayout(this)
-        layout0.orientation = LinearLayout.VERTICAL
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(베타) - 사냥(들판)"
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setBackgroundColor(Color.TRANSPARENT)
-        ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
-        layout0.addView(toolbar)
-
-        txt1 = addTextView("", 20, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-
-        val bnl = BottomNavigationLayout(this)
-        bnl.addBottomButton(
-            "포션",
-            android.R.drawable.ic_menu_search,
-            getRippleDrawable(),
-            Color.WHITE
-        ) {
+        setContentView(R.layout.activity_hunting)
+        txt1 = findViewById(R.id.huntintTxt)
+        val bn: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bn.setOnNavigationItemSelectedListener { item->
             showPortionInventory()
+            return@setOnNavigationItemSelectedListener true
         }
-        bnl.setBackgroundColor(Color.TRANSPARENT)
-        drawer!!.addView(bnl)
-
-        setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
         huntingCheck1()
     }
-    @SuppressLint("RtlHardcoded", "SetTextI18n")
-    private fun createDrawerLayout(): LinearLayout? {
-        try {
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            val title = TextView(this)
-            title.text = "TRPG"
-            title.textSize = 25F
-            title.setTextColor(Color.WHITE)
-            title.setBackgroundColor(Color.BLUE)
-            val pad = dip2px(15)
-            title.setPadding(pad, pad, pad, dip2px(20))
-            val margin = LinearLayout.LayoutParams(-1, -2)
-            margin.setMargins(0, 0, 0, dip2px(10))
-            title.layoutParams = margin
-            layout.addView(title)
-            /*val list = ListView(this)
-            val meuns = arrayOf("패시브확인", "인벤토리")
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meuns)
-            list.adapter = adapter
-            list.onItemClickListener =
-                AdapterView.OnItemClickListener { parent, view, position, id ->
-                    if (position == 0) {
-                        showPassive()
-                    }
-                    if (position == 1) {
-                        showInventoryList()
-                    }
-                }
-            layout.addView(list)*/
-            val params = DrawerLayout.LayoutParams(-1, -1)
-            params.gravity = Gravity.LEFT
-            layout.layoutParams = params
-            layout.setBackgroundColor(Color.WHITE)
-            return layout
-        } catch (e: Exception) {
-            toast(e.toString(), true)
-        }
-        return null
-    }
-    @SuppressLint("RtlHardcoded")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        try {
-            if (drawer!!.isDrawerOpen(Gravity.LEFT)) {
-                drawer!!.closeDrawer(Gravity.LEFT)
-            } else {
-                drawer!!.openDrawer(Gravity.LEFT)
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
     private fun dip2px(dips: Int): Int {
         return ceil(dips * this.resources.displayMetrics.density.toDouble()).toInt()
-    }
-    private fun addTextView(text: String, size: Int, color: Int, gravity: Int?): TextView {
-        val txt = TextView(this)
-        txt.text = text
-        txt.textSize = size.toFloat()
-        txt.setTextColor(color)
-        if (gravity != null) {
-            txt.gravity = gravity
-        }
-        return txt
-    }
-    private fun addButton(txt: String, listener: View.OnClickListener?): Button {
-        val btn = Button(this)
-        btn.text = txt
-        if(listener!=null) {
-            btn.setOnClickListener(listener)
-        }
-        return btn
     }
     private fun toast(msg: String, isLong: Boolean) {
         if(isLong) {
@@ -172,10 +72,6 @@ class field : AppCompatActivity() {
         dialog.setMessage(msg)
         dialog.setNegativeButton("닫기", null)
         dialog.show()
-    }
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun getRippleDrawable(): RippleDrawable? {
-        return RippleDrawable(ColorStateList.valueOf(Color.LTGRAY), ColorDrawable(Color.GRAY), null)
     }
     private fun huntingCheck1() {
         val dialog = AlertDialog.Builder(this)
@@ -256,7 +152,6 @@ class field : AppCompatActivity() {
             huntingCheck()
         }
         dialog.setPositiveButton("싸우기") { dialog, which ->
-            toast(monster[0].toString(), true)
             isHunting = true
             hunting()
         }
@@ -330,7 +225,6 @@ class field : AppCompatActivity() {
             huntingCheck()
         }
         dialog.setPositiveButton("싸우기") { dialog, which ->
-            toast(monster[0].toString(), true)
             isHunting = true
             hunting()
         }
@@ -339,7 +233,7 @@ class field : AppCompatActivity() {
         }
         dialog.show()
     }
-     private fun hunting() {
+    private fun hunting() {
          val `var` = application as variable
          val timer = Timer()
          tt1 = object : TimerTask() {

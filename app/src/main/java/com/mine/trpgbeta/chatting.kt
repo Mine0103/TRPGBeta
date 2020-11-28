@@ -38,7 +38,7 @@ class chatting: AppCompatActivity() {
                     mapData["chat_content"] = doc["chat_content"]!!
                     val time = doc.get("create_at") as Timestamp
                     mapData["create_at"] =
-                        SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초").format(time.toDate())
+                        SimpleDateFormat("MM월 dd일 HH시 mm분").format(time.toDate())
                     dataList.add(mapData)
                 }
             }

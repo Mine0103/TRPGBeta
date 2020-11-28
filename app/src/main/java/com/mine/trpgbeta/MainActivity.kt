@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.LimitExceededException
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -32,6 +33,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.ads.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mine.trpgbeta.hunting.*
 import com.mine.trpgbeta.village.village
 import java.io.*
@@ -87,171 +89,38 @@ class MainActivity : AppCompatActivity() {
     )
     private var am: AssetManager? = null
     private var mAdView: AdView? = null
-    val funs = functions(this)
     private val verName = arrayOf("1.0.0.15", "")
     private val verCode = arrayOf(15, 0)
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    @SuppressLint("RtlHardcoded")
+    @SuppressLint("RtlHardcoded", "CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         if(Build.VERSION.SDK_INT >= 23) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 3)
             }
         }
-        val layout0 = LinearLayout(this)
-        layout0.orientation = LinearLayout.VERTICAL
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(베타)"
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setBackgroundColor(Color.TRANSPARENT)
-        ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
-        layout0.addView(toolbar)
-
-        txt1 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
-        layout.addView(txt1)
-        txt2 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
-        layout.addView(txt2)
-        txt3 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
-        layout.addView(txt3)
-        txt4 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
-        layout.addView(txt4)
-        txt5 = addTextView("", 20, Color.WHITE, Gravity.LEFT)
-        layout.addView(txt5)
-        val lay1 = LinearLayout(this)
-        lay1.orientation = LinearLayout.HORIZONTAL
-        val lay2 = LinearLayout(this)
-        lay2.orientation = LinearLayout.HORIZONTAL
-        val lay3 = LinearLayout(this)
-        lay3.orientation = LinearLayout.HORIZONTAL
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-        val but1 = addButton("스탯") {
-            stat1()
-        }
-        but1.setOnLongClickListener {
-            val var1 = application as variable
-            if (var1.plusStat) {
-                showDialog("알림", "이미 보너스 스탯을 받았습니다.")
-            }
-            if (!var1.plusStat) {
-                var1.plusStat = true
-                var1.stat2[0]+=10
-                toast("보너스 스탯을 받았습니다.", false)
-            }
-            false
-        }
-        but1.width = windowManager.defaultDisplay.width/2
-        lay1.addView(but1)
-        val but2 = addButton("사냥") {
-            hunting()
-        }
-        but2.width = windowManager.defaultDisplay.width/2
-        lay1.addView(but2)
-        val but3 = addButton("마을") {
+        txt1 = findViewById(R.id.txt1)
+        txt2 = findViewById(R.id.txt2)
+        txt3 = findViewById(R.id.txt3)
+        txt4 = findViewById(R.id.txt4)
+        txt5 = findViewById(R.id.txt5)
+        val village = findViewById<Button>(R.id.village)
+        village.setOnClickListener {
             val intent = Intent(applicationContext, village::class.java)
             startActivity(intent)
         }
-        but3.width = windowManager.defaultDisplay.width/2
-        lay2.addView(but3)
-        val meun = addButton("메뉴") {
-            showMeun()
-        }
-        meun.width = windowManager.defaultDisplay.width/2
-        lay2.addView(meun)
-        val chatting = addButton("채팅") {
+        val chat = findViewById<Button>(R.id.chat)
+        chat.setOnClickListener {
             val intent = Intent(applicationContext, chatting::class.java)
             startActivity(intent)
         }
-        lay3.addView(chatting)
-        val loginBut = addButton("로그인") {
-            //val intent = Intent(applicationContext, login::class.java)
-            //startActivity(intent)
-        }
-        val adtest = addButton("광고 테스트") {
-
-        }
-        val debugging = addButton("디버그") {
-            debugging()
-        }
-        //layout.addView(debugging)
-
-        layout.addView(lay1)
-        layout.addView(lay2)
-        layout.addView(lay3)
-
-        val info = addTextView("\n\nby.mine V1.0.0.17\nCopyright (c) 2020. mine. All rights reserved. ", 15, Color.WHITE, Gravity.CENTER)
-        layout.addView(info)
-
-        val bnl = BottomNavigationLayout(this)
-        bnl.addBottomButton("포션", android.R.drawable.ic_menu_search, getRippleDrawable(), Color.WHITE) {
+        val bn: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bn.setOnNavigationItemSelectedListener { item->
             showPortionInventory()
+            return@setOnNavigationItemSelectedListener true
         }
-        bnl.setBackgroundColor(Color.TRANSPARENT)
-        val bnlLayout = LinearLayout(this)
-        bnlLayout.addView(bnl)
-        drawer!!.addView(bnlLayout)
-
-        val adLayout = LinearLayout(this)
-        adLayout.orientation = LinearLayout.VERTICAL
-        adLayout.gravity = Gravity.BOTTOM
-        mAdView = AdView(this)
-        mAdView!!.adSize = AdSize.BANNER
-        //mAdView!!.adUnitId = "ca-app-pub-7018804882363864/9141372167"
-        mAdView!!.adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        val adRequest = AdRequest.Builder().build()
-        mAdView!!.loadAd(adRequest)
-        adLayout.addView(mAdView)
-
-        /*mAdView!!.adListener = object : AdListener() {
-
-            override fun onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                // 광고가 문제 없이 로드시 출력됩니다.
-            }
-
-            override fun onAdFailedToLoad(errorCode: Int) {
-                // Code to be executed when an ad request fails.
-                // 광고 로드에 문제가 있을시 출력됩니다.
-                toast(errorCode.toString(), false)
-            }
-
-            override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            override fun onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            override fun onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-
-        }*/
-
-        val air = TextView(this)
-        air.text = "............"
-        air.width = LinearLayout.LayoutParams.MATCH_PARENT
-        air.height = dip2px(50)
-        //drawer!!.addView(air)
-        //drawer!!.addView(adLayout)
-        setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
@@ -314,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         var1.plusStat = preferences.getBoolean("plusStat", false)
         var1.money = preferences.getInt("money", 500)
         var1.insize = preferences.getInt("inSize", 0)
+        var1.name = preferences.getString("name", "1").toString()
     }
     private fun readInventory(preferences: SharedPreferences, var1: variable) {
         for (n in 0 until var1.insize) {
@@ -383,6 +253,7 @@ class MainActivity : AppCompatActivity() {
         editor.putBoolean("plusStat", var1.plusStat)
         editor.putInt("money", var1.money)
         editor.putInt("inSize", var1.insize)
+        editor.putString("name", var1.name)
     }
     private fun saveInventory(editor: SharedPreferences.Editor, var1: variable) {
         for (n in 0 until var1.insize) {
@@ -398,72 +269,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("RtlHardcoded", "SetTextI18n")
-    private fun createDrawerLayout(): LinearLayout? {
-        try {
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            val title = TextView(this)
-            title.text = "TRPG"
-            title.textSize = 25F
-            title.setTextColor(Color.WHITE)
-            title.setBackgroundColor(Color.BLUE)
-            val pad = dip2px(15)
-            title.setPadding(pad, pad, pad, dip2px(20))
-            val margin = LinearLayout.LayoutParams(-1, -2)
-            margin.setMargins(0, 0, 0, dip2px(10))
-            title.layoutParams = margin
-            layout.addView(title)
-            /*val list = ListView(this)
-            val meuns = arrayOf("패시브확인", "인벤토리")
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meuns)
-            list.adapter = adapter
-            list.onItemClickListener =
-                AdapterView.OnItemClickListener { parent, view, position, id ->
-                    if (position == 0) {
-                        showPassive()
-                    }
-                    if (position == 1) {
-                        showInventoryList()
-                    }
-                }
-            layout.addView(list)*/
-            val params = DrawerLayout.LayoutParams(-1, -1)
-            params.gravity = Gravity.LEFT
-            layout.layoutParams = params
-            layout.setBackgroundColor(Color.WHITE)
-            return layout
-        } catch (e: Exception) {
-            toast(e.toString(), true)
-        }
-        return null
-    }
-    @SuppressLint("RtlHardcoded")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        try {
-            if (drawer!!.isDrawerOpen(Gravity.LEFT)) {
-                drawer!!.closeDrawer(Gravity.LEFT)
-            } else {
-                drawer!!.openDrawer(Gravity.LEFT)
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun dip2px(dips: Int): Int {
         return ceil(dips * this.resources.displayMetrics.density.toDouble()).toInt()
-    }
-    private fun addTextView(text: String, size: Int, color: Int, gravity: Int?): TextView {
-        val txt = TextView(this)
-        txt.text = text
-        txt.textSize = size.toFloat()
-        txt.setTextColor(color)
-        if (gravity != null) {
-            txt.gravity = gravity
-        }
-        return txt
     }
     private fun addButton(txt: String, listener: View.OnClickListener?): Button {
         val btn = Button(this)
@@ -486,10 +293,6 @@ class MainActivity : AppCompatActivity() {
             .setMessage(msg)
             .setNegativeButton("닫기", null)
             .show()
-    }
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun getRippleDrawable(): RippleDrawable? {
-        return RippleDrawable(ColorStateList.valueOf(Color.LTGRAY), ColorDrawable(Color.GRAY), null)
     }
     private fun saveData(path: String, msg: String) {
         try {
@@ -528,7 +331,7 @@ class MainActivity : AppCompatActivity() {
         }
         val data = cache.split("::")
         verName[1] = data[0]
-        toast(cache, false)
+        //toast(cache, false)
         /*verCode[1] = data[1].toInt()
         if(verCode[0]<verCode[1]) {
             AlertDialog.Builder(this)
@@ -769,7 +572,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showMeun() {
+    fun showMeun(v: View) {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val list = ListView(this)
@@ -797,177 +600,105 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun stat1() {
+    fun stat1(v: View) {
         val var1 = application as variable
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
 
-        val txt1 = addTextView("스탯: " + var1.stat2[0], 20, Color.BLACK, Gravity.CENTER)
-        layout.addView(txt1)
-        var meuns: Array<String> = arrayOf(
-            "힘: " + var1.stat2[1],
-            "민첩: " + var1.stat2[2],
-            "체력: " + var1.stat2[3],
-            "운: " + var1.stat2[4],
-            "방어: " + var1.stat2[5],
-            "지능: " + var1.stat2[6],
-            "지혜: " + var1.stat2[7]
-        )
-        val but1 = addButton(meuns[0], null)
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.stat1, null)
+        val txt = view.findViewById<TextView>(R.id.txt1)
+        txt.text = "스탯: ${var1.stat2[0]}"
+        val but1 = view.findViewById<Button>(R.id.but1)
+        but1.text = "힘: ${var1.stat2[1]}"
         but1.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[1]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                "힘: " + var1.stat2[1],
-                "민첩: " + var1.stat2[2],
-                "체력: " + var1.stat2[3],
-                "운: " + var1.stat2[4],
-                "방어: " + var1.stat2[5],
-                "지능: " + var1.stat2[6],
-                "지혜: " + var1.stat2[7]
-                )
-                but1.text = meuns[0]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but1.text = "힘: ${var1.stat2[1]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but1)
-        val but2 = addButton(meuns[1], null)
+        val but2 = view.findViewById<Button>(R.id.but2)
+        but2.text = "민첩: ${var1.stat2[2]}"
         but2.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[2]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but2.text = meuns[1]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but2.text = "민첩: ${var1.stat2[2]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but2)
-        val but3 = addButton(meuns[2], null)
+        val but3 = view.findViewById<Button>(R.id.but3)
+        but3.text = "체력: ${var1.stat2[3]}"
         but3.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[3]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but3.text = meuns[2]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but3.text = "체력: ${var1.stat2[3]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but3)
-        val but4 = addButton(meuns[3], null)
+        val but4 = view.findViewById<Button>(R.id.but4)
+        but4.text = "운: ${var1.stat2[4]}"
         but4.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[4]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but4.text = meuns[3]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but4.text = "운: ${var1.stat2[4]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but4)
-        val but5 = addButton(meuns[4], null)
+        val but5 = view.findViewById<Button>(R.id.but5)
+        but5.text = "방어: ${var1.stat2[5]}"
         but5.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[5]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but5.text = meuns[4]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but5.text = "방어: ${var1.stat2[5]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but5)
-        val but6 = addButton(meuns[5], null)
+        val but6 = view.findViewById<Button>(R.id.but6)
+        but6.text = "지능: ${var1.stat2[6]}"
         but6.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[6]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but6.text = meuns[5]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but6.text = "지능: ${var1.stat2[6]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but6)
-        val but7 = addButton(meuns[6], null)
+        val but7 = view.findViewById<Button>(R.id.but7)
+        but7.text = "지혜: ${var1.stat2[7]}"
         but7.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[7]+=1
-                txt1.text = "스탯: "+var1.stat2[0]
-                meuns = arrayOf(
-                    "힘: " + var1.stat2[1],
-                    "민첩: " + var1.stat2[2],
-                    "체력: " + var1.stat2[3],
-                    "운: " + var1.stat2[4],
-                    "방어: " + var1.stat2[5],
-                    "지능: " + var1.stat2[6],
-                    "지혜: " + var1.stat2[7]
-                )
-                but7.text = meuns[6]
+                txt.text = "스탯: ${var1.stat2[0]}"
+                but7.text = "지혜: ${var1.stat2[7]}"
             } else {
-                showDialog("스탯부족", "스텟이 부족합니다.")
+                showDialog("알림", "스탯이 부족합니다.")
             }
         }
-        layout.addView(but7)
 
         AlertDialog.Builder(this)
-            .setView(layout)
+            .setView(view)
             .setNegativeButton("닫기", null)
             .show()
     }
 
-    private fun hunting() {
+    fun hunting(v: View) {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         val but1 = addButton("들판") {
@@ -1417,6 +1148,7 @@ class MainActivity : AppCompatActivity() {
         layout.addView(loc1)
         AlertDialog.Builder(this)
             .setTitle("이름 변경")
+            .setView(layout)
             .setNegativeButton("취소", null)
             .setPositiveButton("변경") { dialog, which ->
                 var1.name = loc1.text.toString()

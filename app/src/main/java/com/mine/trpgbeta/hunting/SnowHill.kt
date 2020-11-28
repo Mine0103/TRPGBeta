@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mine.trpgbeta.BottomNavigationLayout
 import com.mine.trpgbeta.R
 import com.mine.trpgbeta.variable
@@ -48,43 +49,13 @@ class SnowHill: AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val layout0 = LinearLayout(this)
-        layout0.orientation = LinearLayout.VERTICAL
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(베타) - 사냥(들판)"
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setBackgroundColor(Color.TRANSPARENT)
-        ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        //setSupportActionBar(toolbar)
-        layout0.addView(toolbar)
-
-        txt1 = addTextView("", 20, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-
-        val bnl = BottomNavigationLayout(this)
-        bnl.addBottomButton(
-            "포션",
-            android.R.drawable.ic_menu_search,
-            getRippleDrawable(),
-            Color.WHITE
-        ) {
+        setContentView(R.layout.activity_hunting)
+        txt1 = findViewById(R.id.huntintTxt)
+        val bn: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bn.setOnNavigationItemSelectedListener { item->
             showPortionInventory()
+            return@setOnNavigationItemSelectedListener true
         }
-        bnl.setBackgroundColor(Color.TRANSPARENT)
-        drawer!!.addView(bnl)
-
-        setContentView(drawer)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
