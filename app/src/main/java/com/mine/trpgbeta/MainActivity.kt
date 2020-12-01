@@ -12,30 +12,21 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.LimitExceededException
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.ads.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mine.trpgbeta.hunting.*
-import com.mine.trpgbeta.village.village
+import com.mine.trpgbeta.village.*
 import java.io.*
 import java.net.URL
 import java.util.*
@@ -106,8 +97,8 @@ class MainActivity : AppCompatActivity() {
         txt3 = findViewById(R.id.txt3)
         txt4 = findViewById(R.id.txt4)
         txt5 = findViewById(R.id.txt5)
-        val village = findViewById<Button>(R.id.village)
-        village.setOnClickListener {
+        val village1 = findViewById<Button>(R.id.village)
+        village1.setOnClickListener {
             val intent = Intent(applicationContext, village::class.java)
             startActivity(intent)
         }
@@ -602,18 +593,17 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun stat1(v: View) {
         val var1 = application as variable
-
-        val inflater = LayoutInflater.from(this)
+        val inflater = LayoutInflater.from(applicationContext)
         val view = inflater.inflate(R.layout.stat1, null)
-        val txt = view.findViewById<TextView>(R.id.txt1)
-        txt.text = "스탯: ${var1.stat2[0]}"
+        val st = view.findViewById<TextView>(R.id.stat)
+        st.text = "스탯: ${var1.stat2[0]}"
         val but1 = view.findViewById<Button>(R.id.but1)
         but1.text = "힘: ${var1.stat2[1]}"
         but1.setOnClickListener {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[1]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but1.text = "힘: ${var1.stat2[1]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -625,7 +615,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[2]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but2.text = "민첩: ${var1.stat2[2]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -637,7 +627,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[3]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but3.text = "체력: ${var1.stat2[3]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -649,7 +639,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[4]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but4.text = "운: ${var1.stat2[4]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -661,7 +651,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[5]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but5.text = "방어: ${var1.stat2[5]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -673,7 +663,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[6]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but6.text = "지능: ${var1.stat2[6]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")
@@ -685,7 +675,7 @@ class MainActivity : AppCompatActivity() {
             if(var1.stat2[0]>0) {
                 var1.stat2[0]-=1
                 var1.stat2[7]+=1
-                txt.text = "스탯: ${var1.stat2[0]}"
+                st.text = "스탯: ${var1.stat2[0]}"
                 but7.text = "지혜: ${var1.stat2[7]}"
             } else {
                 showDialog("알림", "스탯이 부족합니다.")

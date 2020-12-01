@@ -30,30 +30,8 @@ class shop : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val `var` = application as variable
-        val layout0 = LinearLayout(this)
-        layout0.orientation = LinearLayout.VERTICAL
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(마을) - 상점"
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setBackgroundColor(Color.TRANSPARENT)
-        layout.addView(toolbar)
-        //setSupportActionBar(toolbar)
-        txt1 = addTextView("", 20, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-        val but1 = addButton("구매", View.OnClickListener { buyDialog() })
-        layout.addView(but1)
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = LinearLayout(this)
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-        setContentView(drawer)
-        setContentView(drawer)
+        setContentView(R.layout.activity_shop)
+        txt1 = findViewById(R.id.money)
         timer1()
     }
 
@@ -93,7 +71,7 @@ class shop : AppCompatActivity() {
         timer.schedule(tt1, 100, 100)
     }
 
-    private fun buyDialog() {
+    fun buyDialog(v: View) {
         val builder = AlertDialog.Builder(this)
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL

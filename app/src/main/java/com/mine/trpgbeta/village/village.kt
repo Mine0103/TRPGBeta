@@ -34,43 +34,26 @@ class village: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val var1 = application as variable
-        val layout0 = LinearLayout(this)
-        layout0.orientation = LinearLayout.VERTICAL
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val toolbar = Toolbar(this)
-        toolbar.title = "TRPG(베타)"
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setBackgroundColor(Color.TRANSPARENT)
-        ViewCompat.setElevation(toolbar, dip2px(5).toFloat())
-        setSupportActionBar(toolbar)
-        layout0.addView(toolbar)
-
-        txt1 = addTextView("마을", 25, Color.WHITE, Gravity.CENTER)
-        layout.addView(txt1)
-        val but1 = addButton("상점") {
+        setContentView(R.layout.activity_village)
+        txt1 = findViewById(R.id.time)
+        val but1 = findViewById<Button>(R.id.shop)
+        but1.setOnClickListener {
             val intent = Intent(applicationContext, shop::class.java)
             if(var1.time in 9..18) startActivity(intent)
             else showDialog("알림", "상점은 9시부터 18시까지 엽니다.")
         }
-        layout.addView(but1)
-        val but2 = addButton("도박장") {
+        val but2 = findViewById<Button>(R.id.casino)
+        but2.setOnClickListener {
             val intent = Intent(applicationContext, casino::class.java)
             if(var1.time in 9..23) startActivity(intent)
             else showDialog("알림", "도박장은 9시부터 23시까지 엽니다.")
         }
-        layout.addView(but2)
-
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        layout0.addView(scroll)
-        drawer = DrawerLayout(this)
-        drawer!!.addView(layout0)
-        val layout2 = createDrawerLayout()
-        drawer!!.addView(layout2)
-        drawer!!.setBackgroundResource(R.drawable.background)
-
-        setContentView(drawer)
+        val but3 = findViewById<Button>(R.id.equipment)
+        but3.setOnClickListener {
+            val intent = Intent(applicationContext, equipment::class.java)
+            if(var1.time in 9..18) startActivity(intent)
+            else showDialog("알림", "장비상점은 9시부터 23시까지 엽니다.")
+        }
         //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //supportActionBar!!.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
 
@@ -78,7 +61,7 @@ class village: AppCompatActivity() {
             @SuppressLint("SetTextI18n")
             override fun run() {
                 runOnUiThread {
-                    txt1?.text = "마을\n시간: ${var1.time}시"
+                    txt1?.text = "  시간: ${var1.time}시"
                 }
             }
         }

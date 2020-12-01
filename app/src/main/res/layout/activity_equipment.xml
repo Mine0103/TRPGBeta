@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Create by mine on 2020. 11. 28.
+  ~ Copyright (c) 2020. mine. All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".village.equipment"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="TRPG(베타) - 마을"
+        app:titleTextColor="#FFFFFF"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/weapon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="무기상점"
+        android:textSize="20sp"
+        android:onClick="buyWeapon"/>
+    <Button
+        android:id="@+id/armor1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="투구상점"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/armor2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="갑옷상점"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/armor3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="바지상점"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/armor4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="신발상점"
+        android:textSize="20sp"/>
+
+</LinearLayout>

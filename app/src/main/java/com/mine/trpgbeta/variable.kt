@@ -21,7 +21,8 @@ class variable: Application() {
     //레벨, 현 경험치, 요구 경험치
     var stat1: Array<Int> = arrayOf(1, 0, 10)
     //스탯 힘 민첩 체력 운 방어 지능 지혜
-    var stat2: Array<Int> = arrayOf(10, 0, 0, 0, 0, 0, 0, 0)
+    //var stat2: Array<Int> = arrayOf(10, 0, 0, 0, 0, 0, 0, 0)
+    var stat2 = arrayOf(10, 0, 0, 0, 0, 0, 0, 0)
     //현 체력, 최대 체력, 현 마나, 최대 마나, 공격력
     var stat3: Array<Int> = arrayOf(10, 10, 10, 10, 0)
     //공격속도, 치명타확률, 방어력

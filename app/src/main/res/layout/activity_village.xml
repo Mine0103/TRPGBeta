@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Create by mine on 2020. 11. 28.
+  ~ Copyright (c) 2020. mine. All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="TRPG(베타) - 마을"
+        app:titleTextColor="#FFFFFF"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/shop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="상점"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/casino"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="도박장"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/equipment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="장비상점"
+        android:textSize="20sp"/>
+
+</LinearLayout>
