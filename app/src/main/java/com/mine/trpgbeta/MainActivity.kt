@@ -97,6 +97,16 @@ class MainActivity : AppCompatActivity() {
         txt3 = findViewById(R.id.txt3)
         txt4 = findViewById(R.id.txt4)
         txt5 = findViewById(R.id.txt5)
+        findViewById<Button>(R.id.stat1).setOnLongClickListener {
+            val var1 = application as variable
+            if(!var1.plusStat) {
+                var1.stat2[0].plus(10)
+                toast("보너스 스탯을 받았습니다", false)
+            } else {
+                showDialog("알림", "이미 보너스 스탯을 받았습니다")
+            }
+            return@setOnLongClickListener false
+        }
         val village1 = findViewById<Button>(R.id.village)
         village1.setOnClickListener {
             val intent = Intent(applicationContext, village::class.java)
@@ -594,7 +604,7 @@ class MainActivity : AppCompatActivity() {
     fun stat1(v: View) {
         val var1 = application as variable
         val inflater = LayoutInflater.from(applicationContext)
-        val view = inflater.inflate(R.layout.stat1, null)
+        val view = inflater.inflate(R.layout.dialog_stat1, null)
         val st = view.findViewById<TextView>(R.id.stat)
         st.text = "스탯: ${var1.stat2[0]}"
         val but1 = view.findViewById<Button>(R.id.but1)
@@ -688,42 +698,37 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    @SuppressLint("InflateParams")
     fun hunting(v: View) {
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        val but1 = addButton("들판") {
+        val inflater = LayoutInflater.from(applicationContext)
+        val view = inflater.inflate(R.layout.dialog_hunting, null)
+        view.findViewById<Button>(R.id.field).setOnClickListener {
             val intent = Intent(applicationContext, field::class.java)
             startActivity(intent)
         }
-        layout.addView(but1)
-        val but2 = addButton("숲") {
+        view.findViewById<Button>(R.id.forest).setOnClickListener {
             val intent = Intent(applicationContext, forest::class.java)
             startActivity(intent)
         }
-        layout.addView(but2)
-        val but3 = addButton("심해") {
+        view.findViewById<Button>(R.id.deepsea).setOnClickListener {
             val intent = Intent(applicationContext, deepsea::class.java)
             startActivity(intent)
         }
-        layout.addView(but3)
-        val but4 = addButton("화산") {
+        view.findViewById<Button>(R.id.volcano).setOnClickListener {
             val intent = Intent(applicationContext, volcano::class.java)
             startActivity(intent)
         }
-        layout.addView(but4)
-        val but5 = addButton("눈의 언덕") {
+        view.findViewById<Button>(R.id.SnowHill).setOnClickListener {
             val intent = Intent(applicationContext, SnowHill::class.java)
             startActivity(intent)
         }
-        layout.addView(but5)
-        val raid = addButton("레이드") {
-            val intent = Intent(applicationContext, raid::class.java);
+        view.findViewById<Button>(R.id.raid).setOnClickListener {
+            val intent = Intent(applicationContext, raid::class.java)
             startActivity(intent)
         }
-        layout.addView(raid)
 
         AlertDialog.Builder(this)
-            .setView(layout)
+            .setView(view)
             .setTitle("사냥")
             .setNegativeButton("닫기", null)
             .show()
