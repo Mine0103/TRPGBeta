@@ -100,7 +100,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.stat1).setOnLongClickListener {
             val var1 = application as variable
             if(!var1.plusStat) {
-                var1.stat2[0].plus(10)
+                var1.stat2[0]+=10
+                var1.plusStat = true
                 toast("보너스 스탯을 받았습니다", false)
             } else {
                 showDialog("알림", "이미 보너스 스탯을 받았습니다")

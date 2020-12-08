@@ -29,7 +29,7 @@ class variable: Application() {
     var stat4: Array<Double> = arrayOf(5.0, 0.0, 0.0)
     //체력 회복량, 마나 회복량
     var stat5: Array<Int> = arrayOf(2, 1)
-    var money = 500
+    var money = 100000
     var itemname = arrayOfNulls<String>(0)
     var itemcount = arrayOfNulls<Int>(0)
     var inventory = arrayOfNulls<String>(0)
