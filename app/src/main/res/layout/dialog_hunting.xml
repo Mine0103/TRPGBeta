@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Create by mine on 2020. 12. 1.
+  ~ Copyright (c) 2020. mine. All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="들판"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/forest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="숲"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/deepsea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="심해"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/volcano"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="화산"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/SnowHill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="눈의 언덕"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/raid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="레이em"
+        android:textSize="20sp"/>
+
+</LinearLayout>
